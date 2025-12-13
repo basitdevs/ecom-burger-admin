@@ -39,7 +39,7 @@ const AppSideBar = () => {
           <SidebarMenuItem>
             <SidebarMenuButton asChild>
               <Link href="/">
-                <Image src="/favicon.ico?favicon.0b3bf435.ico" alt="logo" width={20} height={20} />
+                <Image src="/favicon.ico" alt="logo" width={20} height={20} />
                 <span>Mubarak Albahri</span>
               </Link>
             </SidebarMenuButton>
