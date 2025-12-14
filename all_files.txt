@@ -1,0 +1,1881 @@
+=== D:\ecom-burger\ecom-burger-admin\.gitignore ===
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+/node_modules
+/.pnp
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
+
+# testing
+/coverage
+
+# next.js
+/.next/
+/out/
+
+# production
+/build
+
+# misc
+.DS_Store
+*.pem
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# env files (can opt-in for committing if needed)
+.env*
+
+# vercel
+.vercel
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
+
+
+=== D:\ecom-burger\ecom-burger-admin\app\customers\page.tsx ===
+'use client';
+
+import React from 'react'
+import { RefreshCw } from 'lucide-react'
+import { FaUsers } from "react-icons/fa";
+import { HiMiniUserPlus } from "react-icons/hi2";
+import { FaUserGroup } from "react-icons/fa6";
+import { MdOutlineArrowDropUp } from "react-icons/md";
+import { BsGenderFemale, BsGenderMale, BsGenderAmbiguous } from "react-icons/bs";
+import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
+
+// --- Chart Data Configuration ---
+const PIE_DATA = [
+  { name: 'New Customers', value: 63, color: '#273142' },   // Dark Grey/Navy Slice (Largest)
+  { name: 'Frequent Customers', value: 18, color: '#3b82f6' }, // Blue Slice
+  { name: 'Idle Users', value: 14, color: '#f87171' },      // Red/Pink Slice
+  { name: 'Cart Abandoners', value: 5, color: '#fbbf24' },   // Yellow Slice
+];
+
+const AGE_DATA = [
+  { label: 'Age 18-25', value: 6680, percent: '30%' },
+  { label: 'Age 25-45', value: 15234, percent: '65%' },
+  { label: 'Age 45-65', value: 2034, percent: '20%' },
+  { label: 'Age over 65', value: 792, percent: '10%' },
+];
+
+const Page = () => {
+  return (
+    <div className='w-full min-h-screen bg-[#020617] flex-col justify-center items-center p-6'>
+      
+      {/* --- Header --- */}
+      <div className="w-full bg-[#031123] p-6 rounded-sm flex flex-col md:flex-row items-center justify-between gap-4 hover:shadow-[0px_0px_25px_2px_#002351ad] shadow-[0px_0px_19px_2px_#002351ad] shadow-[#002351ad] font-sans transition-all duration-300">
+        <h1 className="text-[#D8E9FF] text-3xl font-bold tracking-tight">
+          Customers
+        </h1>
+        <div className="flex items-center gap-8">
+          <button className="flex items-center gap-2 text-sm font-bold text-[#D8E9FF] cursor-pointer hover:opacity-80 transition">
+            Data Refresh
+            <RefreshCw color='#4F89FC' size={20} />
+          </button>
+          <div className="bg-[#00193B] border border-[#354585] rounded-sm px-8 py-3 text-[#D8E9FF] text-sm font-bold tracking-wide shadow-[0_0_15px_rgba(29,78,216,0.1)] min-w-[260px] text-center">
+            December 14, 2025 18:10 PM
+          </div>
+        </div>
+      </div>
+
+      {/* --- Top Grid (Stats) --- */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 mt-6 w-full">
+        {/* Card 1 */}
+        <div className="lg:col-span-2 bg-[#031123] rounded-sm p-6 flex flex-col items-center justify-center hover:shadow-[0px_0px_25px_2px_#002351ad] shadow-[0px_0px_19px_2px_#002351ad] shadow-[#002351ad] border border-slate-800/50 transition-all duration-300">
+          <div className="w-12 h-12 rounded-lg bg-[#00BA9D] flex items-center justify-center mb-4">
+            <FaUsers color='#031123' size={20} />
+          </div>
+          <h2 className="text-[#D8E9FF] text-4xl font-bold mb-1 font-sans">32,987</h2>
+          <p className="text-[#D8E9FF] text-lg font-bold mt-1">All Customers</p>
+        </div>
+
+        {/* Card 2 */}
+        <div className="lg:col-span-2 bg-[#031123] rounded-sm p-6 flex flex-col items-center justify-center hover:shadow-[0px_0px_25px_2px_#002351ad] shadow-[0px_0px_19px_2px_#002351ad] shadow-[#002351ad] border border-slate-800/50 transition-all duration-300">
+          <div className="w-12 h-12 rounded-lg bg-[#3b82f6] flex items-center justify-center mb-4">
+            <HiMiniUserPlus color='#031123' size={20} />
+          </div>
+          <h2 className="text-[#D8E9FF] text-4xl font-bold mb-1 font-sans">17,153</h2>
+          <p className="text-[#D8E9FF] text-lg font-bold mt-1">New Customers</p>
+        </div>
+
+        {/* Card 3 */}
+        <div className="lg:col-span-2 bg-[#031123] rounded-sm p-6 flex flex-col items-center justify-center hover:shadow-[0px_0px_25px_2px_#002351ad] shadow-[0px_0px_19px_2px_#002351ad] shadow-[#002351ad] border border-slate-800/50 transition-all duration-300">
+          <div className="w-12 h-12 rounded-lg bg-[#ef4444] flex items-center justify-center mb-4">
+           <FaUserGroup color='#031123' size={20} />
+          </div>
+          <h2 className="text-[#D8E9FF] text-4xl font-bold mb-1 font-sans">7,587</h2>
+          <p className="text-[#D8E9FF] text-lg font-bold mt-1">Regular Customers</p>
+        </div>
+
+        {/* Conversion Rate */}
+        <div className="lg:col-span-6 bg-[#031123] rounded-sm p-6 hover:shadow-[0px_0px_25px_2px_#002351ad] shadow-[0px_0px_19px_2px_#002351ad] shadow-[#002351ad] border border-slate-800/50 transition-all duration-300">
+          <h3 className="text-[#D8E9FF] text-xl font-bold mb-4">Conversion Rate</h3>
+          <div className="flex flex-col xl:flex-row gap-8">
+            <div className="flex-1 overflow-x-auto">
+              <table className="w-full text-left border-collapse">
+                <thead>
+                  <tr className="text-[11px] text-gray-500 uppercase tracking-wider">
+                    <th className="pb-1 font-medium text-[#698D99]">Year</th>
+                    <th className="pb-1 font-medium text-[#698D99]">Customers</th>
+                    <th className="pb-1 font-medium text-[#698D99]">Trend</th>
+                    <th className="pb-1 font-medium text-[#698D99]">Revenue</th>
+                  </tr>
+                </thead>
+                <tbody className="text-sm font-semibold">
+                  <tr className="border-b border-gray-800">
+                    <td className="py-1 font-bold text-[16px] text-[#D8E9FF]">2022</td>
+                    <td className="py-1 font-bold text-[16px]">3,234</td>
+                    <td className="py-1 font-bold text-[16px]">$10%</td>
+                    <td className="py-1 font-bold text-[16px] text-[#D8E9FF]">$124k</td>
+                  </tr>
+                  <tr>
+                    <td className="py-1 font-bold text-[16px] text-[#D8E9FF]">2023</td>
+                    <td className="py-1 font-bold text-[16px]">12,345</td>
+                    <td className="py-1 font-bold text-[16px]">$35%</td>
+                    <td className="py-1 font-bold text-[16px] text-[#D8E9FF]">$32k</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div className="flex gap-8 min-w-fit">
+              <div>
+                <div className="text-3xl font-bold mb-1 text-[#D8E9FF]">32,547</div>
+                <div className="text-[#D8E9FF] text-sm font-medium mb-1">Regular Customers</div>
+                <div className="flex items-center text-[#00d084] text-sm font-bold">
+                  <MdOutlineArrowDropUp size={20} /> +14.08%
+                </div>
+              </div>
+              <div>
+                <div className="text-3xl font-bold mb-1 text-[#D8E9FF]">+12,345</div>
+                <div className="text-[#D8E9FF] text-sm font-medium mb-1">New Customers</div>
+                <div className="flex items-center text-[#00d084] text-sm font-bold">
+                  <MdOutlineArrowDropUp size={20} /> +23%
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* --- Bottom Grid (Retention & Demographics) --- */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 mt-6 w-full">
+        
+        {/* Left: Customer Retention Rate (UPDATED) */}
+        <div className="lg:col-span-7 bg-[#031123] rounded-sm p-6 hover:shadow-[0px_0px_25px_2px_#002351ad] shadow-[0px_0px_19px_2px_#002351ad] shadow-[#002351ad] border border-slate-800/50 transition-all duration-300">
+          <h3 className="text-[#D8E9FF] text-xl font-bold mb-6">Customer Retention Rate</h3>
+          
+          <div className="flex flex-col md:flex-row items-center gap-10">
+            
+            {/* Chart Area */}
+            <div className="w-[400px] h-[400px] relative shrink-0">
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
+                  <Pie
+                    data={PIE_DATA}
+                    cx="50%"
+                    cy="50%"
+                    outerRadius={140}
+                    dataKey="value"
+                    startAngle={90}  // Rotates chart to match image
+                    endAngle={-270}
+                    stroke="none"
+                  >
+                    {PIE_DATA.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={entry.color} />
+                    ))}
+                  </Pie>
+                  <Tooltip 
+                    contentStyle={{ backgroundColor: '#031123', borderColor: '#354585', borderRadius: '4px', color: '#fff' }}
+                    itemStyle={{ color: '#fff' }}
+                  />
+                </PieChart>
+              </ResponsiveContainer>
+            </div>
+
+            {/* Text / Legend Area */}
+            <div className="flex-1">
+              <h4 className="text-[#D8E9FF] text-lg font-bold mb-2">Total Customers - 42,986 in 2023</h4>
+              <p className="text-gray-400 text-sm mb-6 leading-relaxed">
+                Donec placerat, ipsum et bibendum blandit, ligula lectus ullamcorper lorem, in viverra nisl elit viverra massa. Nullam sodales rutrum arcu. Maecenas sed lorem ut dolor tincidunt mattis. Vestibulum vitae aliquet felis, at iaculis metus
+              </p>
+              
+              <ul className="space-y-3">
+                <li className="flex items-center gap-3">
+                  <div className="w-3 h-3 rounded-full bg-[#273142]"></div>
+                  <span className="text-gray-300 text-sm font-medium">New Customers - <span className="text-white font-bold">63%</span>, which is 27,153 visitors</span>
+                </li>
+                <li className="flex items-center gap-3">
+                  <div className="w-3 h-3 rounded-full bg-[#3b82f6]"></div>
+                  <span className="text-gray-300 text-sm font-medium">Frequent Customers - <span className="text-white font-bold">18%</span>, which is 7,587 visitors</span>
+                </li>
+                <li className="flex items-center gap-3">
+                  <div className="w-3 h-3 rounded-full bg-[#f87171]"></div>
+                  <span className="text-gray-300 text-sm font-medium">Idle Users - <span className="text-white font-bold">14%</span>, which is 5,937 visitors</span>
+                </li>
+                <li className="flex items-center gap-3">
+                  <div className="w-3 h-3 rounded-full bg-[#fbbf24]"></div>
+                  <span className="text-gray-300 text-sm font-medium">Cart Abandoners - <span className="text-white font-bold">5%</span>, which is 2,309 visitors</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        {/* Right: Demographics */}
+        <div className="lg:col-span-5 flex flex-col gap-6">
+          
+          {/* Age Segmentation */}
+          <div className="bg-[#031123] rounded-sm p-6 hover:shadow-[0px_0px_25px_2px_#002351ad] shadow-[0px_0px_19px_2px_#002351ad] shadow-[#002351ad] border border-slate-800/50 transition-all duration-300">
+            <h3 className="text-[#D8E9FF] text-xl font-bold mb-6">Demographic segmentation by Age</h3>
+            <div className="space-y-6">
+              {AGE_DATA.map((item, index) => (
+                <div key={index} className="flex flex-col gap-2">
+                  <div className="flex justify-between items-center text-[#D8E9FF] font-bold text-sm">
+                    <span>{item.label}</span>
+                    <span>{item.value.toLocaleString()}</span>
+                  </div>
+                  <div className="h-2 w-full bg-[#18263a] rounded-full overflow-hidden">
+                    <div 
+                      className="h-full bg-[#D8E9FF] rounded-full" 
+                      style={{ width: item.percent }}
+                    ></div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Gender Segmentation */}
+          <div className="bg-[#031123] rounded-sm p-6 hover:shadow-[0px_0px_25px_2px_#002351ad] shadow-[0px_0px_19px_2px_#002351ad] shadow-[#002351ad] border border-slate-800/50 transition-all duration-300">
+            <h3 className="text-[#D8E9FF] text-xl font-bold mb-6">Segmentation by Gender</h3>
+            
+            <div className="flex gap-10 mb-4">
+              <div className="flex flex-col items-start gap-2">
+                <div className="w-10 h-10 bg-[#3b82f6] rounded-md flex items-center justify-center text-black">
+                  <BsGenderFemale size={20} />
+                </div>
+                <span className="text-[#D8E9FF] text-xl font-bold">65%</span>
+              </div>
+              <div className="flex flex-col items-start gap-2">
+                <div className="w-10 h-10 bg-[#3b82f6] rounded-md flex items-center justify-center text-black">
+                  <BsGenderMale size={20} />
+                </div>
+                <span className="text-[#D8E9FF] text-xl font-bold">32%</span>
+              </div>
+              <div className="flex flex-col items-start gap-2">
+                <div className="w-10 h-10 bg-[#3b82f6] rounded-md flex items-center justify-center text-black">
+                  <BsGenderAmbiguous size={20} />
+                </div>
+                <span className="text-[#D8E9FF] text-xl font-bold">3%</span>
+              </div>
+            </div>
+
+            <p className="text-gray-400 text-sm leading-relaxed">
+              Nullam sodales rutrum arcu. Maecenas sed lorem ut dolor tincidunt mattis
+            </p>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  )
+}
+
+export default Page
+
+=== D:\ecom-burger\ecom-burger-admin\app\globals.css ===
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+}
+
+:root {
+  --radius: 0.625rem;
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.145 0 0);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.145 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.145 0 0);
+  --primary: oklch(0.205 0 0);
+  --primary-foreground: oklch(0.985 0 0);
+  --secondary: oklch(0.97 0 0);
+  --secondary-foreground: oklch(0.205 0 0);
+  --muted: oklch(0.97 0 0);
+  --muted-foreground: oklch(0.556 0 0);
+  --accent: oklch(0.97 0 0);
+  --accent-foreground: oklch(0.205 0 0);
+  --destructive: oklch(0.577 0.245 27.325);
+  --border: oklch(0.922 0 0);
+  --input: oklch(0.922 0 0);
+  --ring: oklch(0.708 0 0);
+  --chart-1: oklch(0.646 0.222 41.116);
+  --chart-2: oklch(0.6 0.118 184.704);
+  --chart-3: oklch(0.398 0.07 227.392);
+  --chart-4: oklch(0.828 0.189 84.429);
+  --chart-5: oklch(0.769 0.188 70.08);
+  --sidebar: oklch(0.985 0 0);
+  --sidebar-foreground: oklch(0.145 0 0);
+  --sidebar-primary: oklch(0.205 0 0);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.97 0 0);
+  --sidebar-accent-foreground: oklch(0.205 0 0);
+  --sidebar-border: oklch(0.922 0 0);
+  --sidebar-ring: oklch(0.708 0 0);
+}
+
+.dark {
+  --background: oklch(0.145 0 0);
+  --foreground: oklch(0.985 0 0);
+  --card: oklch(0.205 0 0);
+  --card-foreground: oklch(0.985 0 0);
+  --popover: oklch(0.205 0 0);
+  --popover-foreground: oklch(0.985 0 0);
+  --primary: oklch(0.922 0 0);
+  --primary-foreground: oklch(0.205 0 0);
+  --secondary: oklch(0.269 0 0);
+  --secondary-foreground: oklch(0.985 0 0);
+  --muted: oklch(0.269 0 0);
+  --muted-foreground: oklch(0.708 0 0);
+  --accent: oklch(0.269 0 0);
+  --accent-foreground: oklch(0.985 0 0);
+  --destructive: oklch(0.704 0.191 22.216);
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 15%);
+  --ring: oklch(0.556 0 0);
+  --chart-1: oklch(0.488 0.243 264.376);
+  --chart-2: oklch(0.696 0.17 162.48);
+  --chart-3: oklch(0.769 0.188 70.08);
+  --chart-4: oklch(0.627 0.265 303.9);
+  --chart-5: oklch(0.645 0.246 16.439);
+  --sidebar: oklch(0.205 0 0);
+  --sidebar-foreground: oklch(0.985 0 0);
+  --sidebar-primary: oklch(0.488 0.243 264.376);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.269 0 0);
+  --sidebar-accent-foreground: oklch(0.985 0 0);
+  --sidebar-border: oklch(1 0 0 / 10%);
+  --sidebar-ring: oklch(0.556 0 0);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+
+=== D:\ecom-burger\ecom-burger-admin\app\layout.tsx ===
+import type { Metadata } from "next";
+import { Geist, Geist_Mono } from "next/font/google";
+import "./globals.css";
+import AppSideBar from "@/components/ui/AppSideBar";
+import Navbar from "@/components/ui/Navbar";
+import { ThemeProvider } from "@/components/Providers/Themes/ThemeProviders";
+import { SidebarProvider } from "@/components/ui/sidebar";
+import { cookies } from "next/headers"
+
+const geistSans = Geist({
+  variable: "--font-geist-sans",
+  subsets: ["latin"],
+});
+
+const geistMono = Geist_Mono({
+  variable: "--font-geist-mono",
+  subsets: ["latin"],
+});
+
+export const metadata: Metadata = {
+  title: "Admin Dashboard",
+  description: "Generated by create next app",
+};
+
+export  default async function RootLayout({children}: Readonly<{ children: React.ReactNode;}>)
+
+{
+   const cookieStore = await cookies()
+  const defaultOpen = cookieStore.get("sidebar_state")?.value === "true"
+  return (
+    <html lang="en" suppressHydrationWarning>
+
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} antialiased flex`}
+      >
+     
+        
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            
+         
+        
+
+        <SidebarProvider  defaultOpen={defaultOpen}>
+
+          {/*The SideBar*/}
+        <AppSideBar />
+
+        <main className="w-full">
+
+          {/*The NavBar*/}
+          <Navbar />
+          
+          {/*The Body of HTML*/}
+           <div className="px-4">
+
+          {children} 
+
+
+          </div>
+        </main>
+        </SidebarProvider>
+         </ThemeProvider>
+      </body>
+    </html>
+  );
+}
+
+
+=== D:\ecom-burger\ecom-burger-admin\app\orders\actions.ts ===
+"use server";
+
+import { 
+  getAllOrdersWithDetails, 
+  getDashboardStats, 
+  updateOrderStatusInDb,
+  getOrderItems 
+} from "@/lib/db";
+import { revalidatePath } from "next/cache";
+
+export async function fetchOrderData(page: number = 1, period: string = "all") {
+  try {
+    const [ordersData, stats] = await Promise.all([
+      getAllOrdersWithDetails(page, 10, period),
+      getDashboardStats(),
+    ]);
+
+    // Parse Address JSON safely
+    const parsedOrders = ordersData.orders.map((order) => {
+      let shippingInfo = {};
+      try {
+        shippingInfo = JSON.parse(order.addressJson);
+      } catch (e) {
+        // ignore error
+      }
+      return { ...order, shippingInfo };
+    });
+
+    return { 
+      success: true, 
+      orders: parsedOrders, 
+      totalCount: ordersData.totalCount,
+      stats 
+    };
+  } catch (error) {
+    console.error("Failed to fetch order data:", error);
+    return { success: false, error: "Failed to fetch data" };
+  }
+}
+
+export async function updateOrderStatusAction(orderId: number, newStatus: string) {
+  try {
+    const success = await updateOrderStatusInDb(orderId, newStatus);
+    if(success) {
+      revalidatePath("/orders"); // Refresh the page data on server
+      return { success: true };
+    }
+    return { success: false };
+  } catch (e) {
+    return { success: false };
+  }
+}
+
+export async function getOrderDetailsAction(orderId: number) {
+    try {
+        const items = await getOrderItems(orderId);
+        return { success: true, items };
+    } catch(e) {
+        return { success: false, items: [] };
+    }
+}
+
+=== D:\ecom-burger\ecom-burger-admin\app\orders\page.tsx ===
+"use client";
+
+import React, { useEffect, useState } from "react";
+import {
+  MoreHorizontal,
+  RefreshCcw,
+  Calendar as CalendarIcon,
+  CheckSquare,
+  List,
+  Ban,
+  RotateCcw,
+  Package,
+  Eye,
+  Truck,
+  CheckCircle,
+  XCircle,
+  MapPin,
+  Phone,
+  Mail,
+  ChevronLeft,
+  ChevronRight,
+} from "lucide-react";
+import { format } from "date-fns";
+
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Badge } from "@/components/ui/badge";
+import { Progress } from "@/components/ui/progress";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from "@/components/ui/dialog";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Separator } from "@/components/ui/separator";
+import { toast } from "sonner"; // Assuming you have sonner or use standard alert
+
+// Import Actions
+import {
+  fetchOrderData,
+  updateOrderStatusAction,
+  getOrderDetailsAction,
+} from "./actions";
+
+// --- Components ---
+
+const StatusBadge = ({ status }: { status: string }) => {
+  const styles: Record<string, string> = {
+    DELIVERED:
+      "bg-blue-500/15 text-blue-600 dark:bg-blue-500/20 dark:text-blue-400",
+    COMPLETED:
+      "bg-blue-500/15 text-blue-600 dark:bg-blue-500/20 dark:text-blue-400",
+    PAID: "bg-emerald-500/15 text-emerald-600 dark:bg-emerald-500/20 dark:text-emerald-400",
+    CONFIRMED:
+      "bg-emerald-500/15 text-emerald-600 dark:bg-emerald-500/20 dark:text-emerald-400",
+    SHIPPED:
+      "bg-yellow-500/15 text-yellow-600 dark:bg-yellow-500/20 dark:text-yellow-400",
+    CANCELLED:
+      "bg-red-500/15 text-red-600 dark:bg-red-500/20 dark:text-red-400",
+  };
+  return (
+    <Badge
+      className={`${
+        styles[status] || "bg-gray-100 text-gray-800"
+      } border-0 px-2 py-1`}
+    >
+      {status}
+    </Badge>
+  );
+};
+
+export default function OrdersDashboard() {
+  const [data, setData] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+  const [currentDate, setCurrentDate] = useState(new Date());
+
+  // Pagination & Filtering State
+  const [page, setPage] = useState(1);
+  const [period, setPeriod] = useState("all");
+  const pageSize = 10;
+
+  // Modal State
+  const [isDetailsOpen, setIsDetailsOpen] = useState(false);
+  const [selectedOrder, setSelectedOrder] = useState<any>(null);
+  const [orderItems, setOrderItems] = useState<any[]>([]);
+  const [loadingItems, setLoadingItems] = useState(false);
+
+  // Load Data Function
+  const loadData = async () => {
+    setLoading(true);
+    const result = await fetchOrderData(page, period);
+    if (result.success) {
+      setData({
+        orders: result.orders,
+        stats: result.stats,
+        totalCount: result.totalCount,
+      });
+    }
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    loadData();
+    const timer = setInterval(() => setCurrentDate(new Date()), 60000);
+    return () => clearInterval(timer);
+  }, [page, period]);
+
+  // Actions
+  const handleStatusChange = async (orderId: number, newStatus: string) => {
+    toast.promise(updateOrderStatusAction(orderId, newStatus), {
+      loading: "Updating status...",
+      success: () => {
+        loadData();
+        return `Order marked as ${newStatus}`;
+      },
+      error: "Failed to update",
+    });
+  };
+
+  const openOrderDetails = async (order: any) => {
+    setSelectedOrder(order);
+    setIsDetailsOpen(true);
+    setLoadingItems(true);
+    const result = await getOrderDetailsAction(order.id);
+    if (result.success) {
+      setOrderItems(result.items);
+    }
+    setLoadingItems(false);
+  };
+
+  if (loading && !data) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-[#0b1121]">
+        <RefreshCcw className="h-8 w-8 animate-spin text-blue-600" />
+      </div>
+    );
+  }
+
+  const { stats, orders, totalCount } = data || {
+    stats: {},
+    orders: [],
+    totalCount: 0,
+  };
+  const totalPages = Math.ceil(totalCount / pageSize);
+
+  return (
+    <div className="min-h-screen bg-gray-50 dark:bg-[#0b1121] text-gray-900 dark:text-gray-100 p-4 md:p-8 font-sans">
+      {/* Header */}
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+        <h1 className="text-3xl font-bold tracking-tight">Orders</h1>
+        <div className="flex items-center gap-3">
+          <Button
+            onClick={loadData}
+            variant="ghost"
+            className="text-blue-600 dark:text-blue-400"
+          >
+            Data Refresh <RefreshCcw className="ml-2 h-4 w-4" />
+          </Button>
+          <div className="hidden md:flex items-center px-4 py-2 bg-white dark:bg-[#151e32] border border-gray-200 dark:border-gray-800 rounded-lg text-sm font-medium shadow-sm">
+            <span className="text-gray-500 dark:text-gray-400 mr-2">
+              {format(currentDate, "MMMM d, yyyy")}
+            </span>
+            <span>{format(currentDate, "HH:mm a")}</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Filters */}
+      <div className="mb-6 flex flex-col md:flex-row gap-4 justify-between items-end">
+        <div>
+          <div className="mb-2 text-sm font-semibold text-gray-700 dark:text-gray-300">
+            Sales period:
+          </div>
+          <div className="flex gap-4">
+            <Select
+              value={period}
+              onValueChange={(val) => {
+                setPeriod(val);
+                setPage(1);
+              }}
+            >
+              <SelectTrigger className="w-[180px] bg-white dark:bg-[#151e32]">
+                <SelectValue placeholder="Period" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Time</SelectItem>
+                <SelectItem value="today">Today</SelectItem>
+                <SelectItem value="week">This Week</SelectItem>
+                <SelectItem value="month">This Month</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
+      </div>
+
+      {/* Stats Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-8">
+        <Card className="bg-gray-900 text-white border-none shadow-lg">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium text-gray-100">
+              Revenue
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="flex justify-between text-xs mb-1">
+              <span className="text-gray-300">Total</span>
+              <span className="font-bold">
+                ${stats.totalRevenue?.toLocaleString()}
+              </span>
+            </div>
+            <Progress value={75} className="h-2 bg-gray-700" />
+          </CardContent>
+        </Card>
+        {/* Helper function for cards */}
+        {[
+          {
+            title: "Total Orders",
+            val: stats.totalOrders,
+            icon: CheckSquare,
+            color: "blue",
+          },
+          {
+            title: "Paid / Confirmed",
+            val: stats.confirmedOrders,
+            icon: List,
+            color: "emerald",
+          },
+          {
+            title: "Canceled",
+            val: stats.cancelledOrders,
+            icon: Ban,
+            color: "red",
+          },
+          {
+            title: "Completed",
+            val: stats.completedOrders,
+            icon: RotateCcw,
+            color: "gray",
+          },
+        ].map((item, idx) => (
+          <Card
+            key={idx}
+            className="bg-white dark:bg-[#151e32] border-gray-100 dark:border-gray-800"
+          >
+            <CardHeader className="flex flex-row items-center justify-between pb-2">
+              <div
+                className={`bg-${item.color}-100 dark:bg-${item.color}-900/30 p-2 rounded-lg`}
+              >
+                <item.icon
+                  className={`h-5 w-5 text-${item.color}-600 dark:text-${item.color}-400`}
+                />
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="text-sm font-medium text-gray-500">
+                {item.title}
+              </div>
+              <div className="text-2xl font-bold mt-1">{item.val}</div>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+
+      {/* Table */}
+      <div className="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-[#151e32] shadow-sm overflow-hidden">
+        <Table>
+          <TableHeader className="bg-gray-50 dark:bg-[#1a243a]">
+            <TableRow>
+              <TableHead># Order</TableHead>
+              <TableHead>Product</TableHead>
+              <TableHead>Customer</TableHead>
+              <TableHead>Category</TableHead>
+              <TableHead>Total</TableHead>
+              <TableHead>Status</TableHead>
+              <TableHead className="text-right">Actions</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {orders.length === 0 ? (
+              <TableRow>
+                <TableCell colSpan={7} className="text-center py-10">
+                  No orders found.
+                </TableCell>
+              </TableRow>
+            ) : (
+              orders.map((order: any) => (
+                <TableRow
+                  key={order.id}
+                  className="hover:bg-gray-50 dark:hover:bg-[#1e2a42]"
+                >
+                  <TableCell className="font-semibold text-blue-600">
+                    #{order.id}
+                  </TableCell>
+                  <TableCell>
+                    <div className="flex items-center gap-3">
+                      <Avatar className="h-10 w-10 rounded-md bg-gray-100">
+                        <AvatarImage src={order.productImage} />
+                        <AvatarFallback>
+                          <Package size={16} />
+                        </AvatarFallback>
+                      </Avatar>
+                      <div>
+                        <span className="font-medium text-sm block">
+                          {order.productName || "Product"}
+                        </span>
+                        <span className="text-xs text-gray-500">
+                          {order.itemsCount > 1
+                            ? `+${order.itemsCount - 1} more items`
+                            : ""}
+                        </span>
+                      </div>
+                    </div>
+                  </TableCell>
+                  <TableCell>
+                    <div className="flex flex-col text-sm">
+                      <span className="font-medium">{order.customerName}</span>
+                      <span className="text-xs text-gray-400">
+                        {order.customerEmail}
+                      </span>
+                    </div>
+                  </TableCell>
+                  <TableCell>
+                    <Badge variant="outline" className="font-normal">
+                      {order.categoryName}
+                    </Badge>
+                  </TableCell>
+                  <TableCell className="font-bold">
+                    ${order.totalAmount}
+                  </TableCell>
+                  <TableCell>
+                    <StatusBadge status={order.status} />
+                  </TableCell>
+                  <TableCell className="text-right">
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" size="icon">
+                          <MoreHorizontal size={16} />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end">
+                        <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                        <DropdownMenuItem
+                          onClick={() => openOrderDetails(order)}
+                        >
+                          <Eye className="mr-2 h-4 w-4" /> View Details
+                        </DropdownMenuItem>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuLabel>Update Status</DropdownMenuLabel>
+                        <DropdownMenuItem
+                          onClick={() =>
+                            handleStatusChange(order.id, "SHIPPED")
+                          }
+                        >
+                          <Truck className="mr-2 h-4 w-4" /> Mark Shipped
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                          onClick={() =>
+                            handleStatusChange(order.id, "DELIVERED")
+                          }
+                        >
+                          <CheckCircle className="mr-2 h-4 w-4" /> Mark
+                          Delivered
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                          onClick={() =>
+                            handleStatusChange(order.id, "CANCELLED")
+                          }
+                        >
+                          <XCircle className="mr-2 h-4 w-4" /> Cancel Order
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </TableCell>
+                </TableRow>
+              ))
+            )}
+          </TableBody>
+        </Table>
+      </div>
+
+      {/* Pagination Footer */}
+      <div className="flex justify-between items-center mt-6">
+        <div className="text-sm text-gray-500">
+          Page {page} of {totalPages}
+        </div>
+        <div className="flex gap-2">
+          <Button
+            variant="outline"
+            disabled={page <= 1}
+            onClick={() => setPage((p) => p - 1)}
+          >
+            <ChevronLeft className="h-4 w-4" />
+          </Button>
+          <Button
+            variant="outline"
+            disabled={page >= totalPages}
+            onClick={() => setPage((p) => p + 1)}
+          >
+            <ChevronRight className="h-4 w-4" />
+          </Button>
+        </div>
+      </div>
+
+      {/* --- ORDER DETAILS MODAL --- */}
+      <Dialog open={isDetailsOpen} onOpenChange={setIsDetailsOpen}>
+        <DialogContent className="max-w-2xl bg-white dark:bg-[#151e32]">
+          <DialogHeader>
+            <DialogTitle>Order #{selectedOrder?.id} Details</DialogTitle>
+            <DialogDescription>
+              Placed on{" "}
+              {selectedOrder
+                ? format(new Date(selectedOrder.date), "PPP p")
+                : ""}
+            </DialogDescription>
+          </DialogHeader>
+
+          {selectedOrder && (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
+              {/* Customer Info */}
+              <div className="space-y-3">
+                <h4 className="font-semibold flex items-center gap-2">
+                  <MapPin size={16} /> Shipping Address
+                </h4>
+                <div className="text-sm bg-gray-50 dark:bg-gray-800 p-3 rounded-md">
+                  <p className="font-medium">{selectedOrder.customerName}</p>
+                  <p>
+                    {selectedOrder.shippingInfo?.area}, Block{" "}
+                    {selectedOrder.shippingInfo?.block}
+                  </p>
+                  <p>
+                    {selectedOrder.shippingInfo?.street}{" "}
+                    {selectedOrder.shippingInfo?.house}
+                  </p>
+                  <p>{selectedOrder.shippingInfo?.avenue}</p>
+                  {selectedOrder.shippingInfo?.specialDirections && (
+                    <p className="text-yellow-600 mt-1 text-xs">
+                      Note: {selectedOrder.shippingInfo.specialDirections}
+                    </p>
+                  )}
+                </div>
+              </div>
+
+              {/* Contact Info */}
+              <div className="space-y-3">
+                <h4 className="font-semibold flex items-center gap-2">
+                  <Phone size={16} /> Contact Info
+                </h4>
+                <div className="text-sm bg-gray-50 dark:bg-gray-800 p-3 rounded-md space-y-2">
+                  <div className="flex items-center gap-2">
+                    <Mail size={14} /> {selectedOrder.customerEmail}
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Phone size={14} />{" "}
+                    {selectedOrder.customerPhone ||
+                      selectedOrder.shippingInfo?.phone}
+                  </div>
+                </div>
+
+                <div className="mt-4 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-md flex justify-between items-center">
+                  <span className="font-semibold text-blue-700 dark:text-blue-300">
+                    Total Paid
+                  </span>
+                  <span className="text-xl font-bold text-blue-700 dark:text-blue-300">
+                    {selectedOrder.totalAmount.toFixed(3)} KWD
+                  </span>
+                </div>
+              </div>
+
+              {/* Order Items List */}
+              <div className="md:col-span-2">
+                <Separator className="my-2" />
+                <h4 className="font-semibold mb-3">Order Items</h4>
+                <div className="space-y-3 max-h-[200px] overflow-y-auto pr-2">
+                  {loadingItems ? (
+                    <p className="text-sm text-gray-500">Loading items...</p>
+                  ) : (
+                    orderItems.map((item, idx) => (
+                      <div
+                        key={idx}
+                        className="flex justify-between items-center bg-gray-50 dark:bg-gray-800 p-2 rounded-md"
+                      >
+                        <div className="flex items-center gap-3">
+                          <div className="h-10 w-10 bg-white rounded overflow-hidden">
+                            <img
+                              src={item.image}
+                              alt={item.productName}
+                              className="object-cover w-full h-full"
+                            />
+                          </div>
+                          <div>
+                            <p className="text-sm font-medium">
+                              {item.productName}
+                            </p>
+                            <p className="text-xs text-gray-500">
+                              Qty: {item.quantity}
+                            </p>
+                          </div>
+                        </div>
+                        <p className="font-semibold text-sm">
+                          {item.price.toFixed(3)} KWD
+                        </p>
+                      </div>
+                    ))
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsDetailsOpen(false)}>
+              Close
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </div>
+  );
+}
+
+
+=== D:\ecom-burger\ecom-burger-admin\app\page.tsx ===
+import AppAreaChart from "@/components/ui/AppAreaChart";
+import AppBarChart from "@/components/ui/AppBarChart";
+import AppPieChart from "@/components/ui/AppPieChart";
+import AppDataTable from "@/components/ui/AppDataTable";
+import AppRadar from "@/components/ui/AppRadar";
+import AppRedial from "@/components/ui/AppRedial";
+import Image from "next/image";
+
+const HomePage = () => {
+
+    return(
+        
+        /* 2xl for large screen || lg for medium screen || grid small screen (mobile screen)*/
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-4 gap-4">
+
+        <div className="bg-primary-foreground p-4 rounded-lg lg:col-span-2 xl:col-span-1 2xl:col-span-2"><AppBarChart/></div>
+        <div className="bg-primary-foreground p-4 rounded-lg"><AppRadar/></div>
+        <div className="bg-primary-foreground p-4 rounded-lg"><AppPieChart/></div>
+        <div className="bg-primary-foreground p-4 rounded-lg"><AppDataTable/></div>
+        <div className="bg-primary-foreground p-4 rounded-lg lg:col-span-2 xl:col-span-1 2xl:col-span-2"><AppAreaChart/></div>
+        <div className="bg-primary-foreground p-4 rounded-lg"><AppRedial/></div>
+
+
+
+
+        </div>
+        
+
+
+
+    );
+
+}
+
+export default HomePage;
+
+
+=== D:\ecom-burger\ecom-burger-admin\app\products\page.tsx ===
+import React from 'react'
+
+const page = () => {
+  return (
+    <div>page</div>
+  )
+}
+
+export default page
+
+=== D:\ecom-burger\ecom-burger-admin\app\transactions\page.tsx ===
+import React from 'react';
+import { 
+  Calendar, 
+  ChevronDown, 
+  Clock, 
+  ChevronsRight, 
+  Search,
+  Fish,       // For Whale logo
+  ShoppingBag, // For Albo logo
+  Layers,     // For Ecom logo
+  Sun         // For Delight logo
+} from 'lucide-react';
+
+const TransactionsPage = () => {
+  
+  // --- Mock Data based on the image ---
+  const transactions = [
+    {
+      id: 1,
+      date: '24/11/2025',
+      time: '12:34 PM',
+      seller: 'Whale',
+      logoIcon: <Fish size={20} className="text-[#3b82f6]" />, 
+      logoBg: 'bg-white',
+      sku: '94781',
+      method: 'Mastercard',
+      type: 'Payment',
+      status: 'APPROVED',
+      country: 'France',
+      curr: 'OMR',
+      fee: '3242.57',
+      tax: '0.3',
+      total: '$3232.84'
+    },
+    {
+      id: 2,
+      date: '16/11/2025',
+      time: '07:00 AM',
+      seller: 'Albo E-Store',
+      logoIcon: <ShoppingBag size={20} className="text-black" />,
+      logoBg: 'bg-white',
+      sku: '68368',
+      method: 'Visa',
+      type: 'Withdrawal',
+      status: 'WAITING',
+      country: 'USA',
+      curr: 'GNF',
+      fee: '5410.06',
+      tax: '1.0',
+      total: '$5355.96'
+    },
+    {
+      id: 3,
+      date: '08/11/2025',
+      time: '07:40 PM',
+      seller: 'Ecom',
+      logoIcon: <Layers size={20} className="text-[#fb923c]" />,
+      logoBg: 'bg-white',
+      sku: '37567',
+      method: 'Visa',
+      type: 'Invoice',
+      status: 'APPROVED',
+      country: 'USA',
+      curr: 'BGN',
+      fee: '1435.79',
+      tax: '0.2',
+      total: '$1432.92'
+    },
+    {
+      id: 4,
+      date: '07/11/2025',
+      time: '04:01 PM',
+      seller: 'Delight',
+      logoIcon: <Sun size={20} className="text-[#84cc16]" />,
+      logoBg: 'bg-white',
+      sku: '55115',
+      method: 'Switch',
+      type: 'Payment',
+      status: 'CANCELLED',
+      country: 'Italy',
+      curr: 'RWF',
+      fee: '5548.04',
+      tax: '0.3',
+      total: '$5531.40'
+    },
+    {
+      id: 5,
+      date: '15/09/2025',
+      time: '01:42 PM',
+      seller: 'Albo E-Store',
+      logoIcon: <ShoppingBag size={20} className="text-black" />,
+      logoBg: 'bg-white',
+      sku: '28821',
+      method: 'Mastercard',
+      type: 'Withdrawal',
+      status: 'APPROVED',
+      country: 'Sweden',
+      curr: 'MYR',
+      fee: '9597.92',
+      tax: '0.5',
+      total: '$9549.93'
+    },
+    {
+      id: 6,
+      date: '04/09/2025',
+      time: '07:40 PM',
+      seller: 'Delight',
+      logoIcon: <Sun size={20} className="text-[#84cc16]" />,
+      logoBg: 'bg-white',
+      sku: '13236',
+      method: 'Visa',
+      type: 'Deposit',
+      status: 'REJECTED',
+      country: 'USA',
+      curr: 'SLE',
+      fee: '9667.23',
+      tax: '0.3',
+      total: '$9638.23'
+    },
+  ];
+
+  // --- Helper for Status Styles ---
+  const getStatusStyles = (status: string) => {
+    switch (status) {
+      case 'APPROVED':
+        return 'bg-[#3b82f6] text-white'; // Blue
+      case 'WAITING':
+        return 'bg-[#10b981] text-[#020617]'; // Teal/Green with dark text
+      case 'CANCELLED':
+        return 'bg-[#ef4444] text-white'; // Red
+      case 'REJECTED':
+        return 'bg-[#9ca3af] text-[#020617]'; // Gray
+      default:
+        return 'bg-gray-500 text-white';
+    }
+  };
+
+  return (
+    <div className="min-h-screen w-full bg-[#020617] p-8 font-sans text-slate-300">
+      
+      {/* --- Top Controls Header --- */}
+      <div className="flex flex-col md:flex-row justify-between items-end md:items-center mb-6 gap-4">
+        
+        {/* Left: Date Picker */}
+        <div className="flex flex-col gap-2">
+          <label className="text-white font-bold text-lg">Transaction date from:</label>
+          <div className="relative">
+            <input 
+              type="text" 
+              value="01/01/2025 - 14/12/2025" 
+              readOnly
+              className="bg-[#0b1b36] border border-slate-700 text-white text-sm font-bold rounded-md py-3 pl-4 pr-12 w-[280px] outline-none focus:border-blue-500 transition"
+            />
+            <Calendar className="absolute right-4 top-3 text-[#3b82f6]" size={18} />
+          </div>
+        </div>
+
+        {/* Right: View Selector */}
+        <div className="flex flex-col gap-2 items-end">
+          <span className="text-slate-400 text-sm font-medium">View transactions: 6/12</span>
+          <div className="relative">
+            <button className="bg-[#0b1b36] border border-slate-700 text-white text-sm font-medium rounded-md py-2.5 pl-4 pr-10 w-[180px] text-left outline-none flex items-center justify-between">
+              Recent
+              <ChevronDown size={16} className="text-[#3b82f6]" />
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* --- Main Transactions Table Card --- */}
+      <div className="w-full bg-[#031123] rounded-lg border border-slate-800/50 shadow-xl overflow-hidden">
+        
+        <div className="overflow-x-auto">
+          <table className="w-full min-w-[1200px]">
+            {/* Table Header */}
+            <thead>
+              <tr className="border-b border-slate-800">
+                <th className="py-5 px-6 text-left text-[11px] font-bold text-[#3b82f6] uppercase tracking-wider">Date & Time</th>
+                <th className="py-5 px-6 text-left text-[11px] font-bold text-[#3b82f6] uppercase tracking-wider">Seller</th>
+                <th className="py-5 px-6 text-left text-[11px] font-bold text-[#3b82f6] uppercase tracking-wider">Sku</th>
+                <th className="py-5 px-6 text-left text-[11px] font-bold text-[#3b82f6] uppercase tracking-wider">Method</th>
+                <th className="py-5 px-6 text-left text-[11px] font-bold text-[#3b82f6] uppercase tracking-wider">Type</th>
+                <th className="py-5 px-6 text-left text-[11px] font-bold text-[#3b82f6] uppercase tracking-wider">Status</th>
+                <th className="py-5 px-6 text-left text-[11px] font-bold text-[#3b82f6] uppercase tracking-wider">Country</th>
+                <th className="py-5 px-6 text-left text-[11px] font-bold text-[#3b82f6] uppercase tracking-wider">Curr</th>
+                <th className="py-5 px-6 text-left text-[11px] font-bold text-[#3b82f6] uppercase tracking-wider">Fee</th>
+                <th className="py-5 px-6 text-left text-[11px] font-bold text-[#3b82f6] uppercase tracking-wider">Tax</th>
+                <th className="py-5 px-6 text-left text-[11px] font-bold text-[#3b82f6] uppercase tracking-wider">Total</th>
+              </tr>
+            </thead>
+
+            {/* Table Body */}
+            <tbody>
+              {transactions.map((item, index) => (
+                <tr 
+                  key={item.id} 
+                  className={`border-b border-slate-800/50 hover:bg-[#0b1b36] transition-colors ${index % 2 === 0 ? '' : ''}`}
+                >
+                  {/* Date & Time */}
+                  <td className="py-5 px-6">
+                    <div className="flex items-start gap-2.5">
+                      <Clock size={16} className="text-[#3b82f6] mt-1 shrink-0" />
+                      <div className="flex flex-col">
+                        <span className="text-white font-bold text-sm">{item.date}</span>
+                        <span className="text-slate-400 text-xs font-medium mt-0.5">at {item.time}</span>
+                      </div>
+                    </div>
+                  </td>
+
+                  {/* Seller */}
+                  <td className="py-5 px-6">
+                    <div className="flex items-center gap-3">
+                      <div className={`w-10 h-10 rounded-lg ${item.logoBg} flex items-center justify-center shrink-0`}>
+                        {item.logoIcon}
+                      </div>
+                      <span className="text-white font-bold text-sm">{item.seller}</span>
+                    </div>
+                  </td>
+
+                  {/* SKU */}
+                  <td className="py-5 px-6 text-white font-medium text-sm">{item.sku}</td>
+
+                  {/* Method */}
+                  <td className="py-5 px-6 text-white font-medium text-sm">{item.method}</td>
+
+                  {/* Type */}
+                  <td className="py-5 px-6 text-white font-medium text-sm">{item.type}</td>
+
+                  {/* Status */}
+                  <td className="py-5 px-6">
+                    <span className={`px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wide ${getStatusStyles(item.status)}`}>
+                      {item.status}
+                    </span>
+                  </td>
+
+                  {/* Country */}
+                  <td className="py-5 px-6 text-white font-medium text-sm">{item.country}</td>
+
+                  {/* Curr */}
+                  <td className="py-5 px-6 text-white font-medium text-sm">{item.curr}</td>
+
+                  {/* Fee */}
+                  <td className="py-5 px-6 text-slate-300 font-medium text-sm">{item.fee}</td>
+
+                  {/* Tax */}
+                  <td className="py-5 px-6 text-slate-300 font-medium text-sm">{item.tax}</td>
+
+                  {/* Total */}
+                  <td className="py-5 px-6 text-white font-bold text-sm">{item.total}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      {/* --- Pagination Footer --- */}
+      <div className="mt-6 flex items-center gap-2">
+        <button className="w-9 h-9 flex items-center justify-center rounded-md bg-[#3b82f6] text-white font-bold text-sm shadow-lg shadow-blue-900/50 transition">
+          1
+        </button>
+        <button className="w-9 h-9 flex items-center justify-center rounded-md border border-slate-700 bg-transparent text-slate-400 font-bold text-sm hover:bg-slate-800 transition">
+          2
+        </button>
+        <button className="w-9 h-9 flex items-center justify-center rounded-md border border-slate-700 bg-transparent text-[#3b82f6] hover:bg-slate-800 transition">
+          <ChevronsRight size={18} />
+        </button>
+      </div>
+
+    </div>
+  );
+};
+
+export default TransactionsPage;
+
+=== D:\ecom-burger\ecom-burger-admin\components\hooks\use-mobile.ts ===
+import * as React from "react"
+
+const MOBILE_BREAKPOINT = 768
+
+export function useIsMobile() {
+  const [isMobile, setIsMobile] = React.useState<boolean | undefined>(undefined)
+
+  React.useEffect(() => {
+    const mql = window.matchMedia(`(max-width: ${MOBILE_BREAKPOINT - 1}px)`)
+    const onChange = () => {
+      setIsMobile(window.innerWidth < MOBILE_BREAKPOINT)
+    }
+    mql.addEventListener("change", onChange)
+    setIsMobile(window.innerWidth < MOBILE_BREAKPOINT)
+    return () => mql.removeEventListener("change", onChange)
+  }, [])
+
+  return !!isMobile
+}
+
+
+=== D:\ecom-burger\ecom-burger-admin\components\Providers\Themes\ThemeProviders.tsx ===
+"use client"
+
+import * as React from "react"
+import { ThemeProvider as NextThemesProvider } from "next-themes"
+
+export function ThemeProvider({
+  children,
+  ...props
+}: React.ComponentProps<typeof NextThemesProvider>) {
+  return <NextThemesProvider {...props}>{children}</NextThemesProvider>
+}
+
+=== D:\ecom-burger\ecom-burger-admin\eslint.config.mjs ===
+import { dirname } from "path";
+import { fileURLToPath } from "url";
+import { FlatCompat } from "@eslint/eslintrc";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+const compat = new FlatCompat({
+  baseDirectory: __dirname,
+});
+
+const eslintConfig = [
+  ...compat.extends("next/core-web-vitals", "next/typescript"),
+  {
+    ignores: [
+      "node_modules/**",
+      ".next/**",
+      "out/**",
+      "build/**",
+      "next-env.d.ts",
+    ],
+  },
+];
+
+export default eslintConfig;
+
+
+=== D:\ecom-burger\ecom-burger-admin\lib\db.ts ===
+import sql, { config as SQLConfig, ConnectionPool } from "mssql";
+
+export interface Product {
+  id: number;
+  Title: string;
+  Title_ar?: string;
+  price: number;
+  image: string;
+
+  categoryId: number;
+}
+
+export interface Category {
+  id: number;
+  name: string;
+  name_ar?: string;
+}
+
+export interface RestaurantInfo {
+  id: number;
+  name: string;
+  name_ar?: string;
+  tagline: string;
+  tagline_ar?: string;
+  logoUrl: string;
+  phone: string;
+  address: string;
+  address_ar?: string;
+  email: string;
+}
+
+export interface ShippingDetails {
+  name: string;
+  phone: string;
+  email: string;
+  area: string;
+  block: string;
+  street: string;
+  house: string;
+  avenue?: string;
+  specialDirections?: string;
+}
+
+export interface OrderItemInput {
+  id?: number; // <--- ADDED THIS (The Product ID)
+  Title: string;
+  Title_ar?: string;
+  qty: number;
+  price: number;
+  image: string;
+}
+
+export interface CreateOrderInput {
+  paymentId: string;
+  customerName: string;
+  customerEmail: string;
+  customerPhone: string;
+  address: ShippingDetails;
+  totalAmount: number;
+  items: OrderItemInput[];
+}
+
+export interface DashboardStats {
+  totalRevenue: number;
+  totalOrders: number;
+  completedOrders: number;
+  confirmedOrders: number;
+  cancelledOrders: number;
+}
+
+export interface OrderDTO {
+  id: number;
+  paymentId: string;
+  customerName: string;
+  customerEmail: string;
+  customerPhone?: string; // Added
+  totalAmount: number;
+  status: string;
+  date: Date;
+  addressJson: string;
+  productName: string;
+  productImage: string;
+  categoryName: string; // Added
+  itemsCount: number;
+}
+
+export interface OrderItemDetail {
+  productName: string;
+  quantity: number;
+  price: number;
+  image: string;
+}
+
+const config: SQLConfig = {
+  user: "db_abece2_ecommerce_admin",
+  password: "Mobark12.",
+  server: "sql6030.site4now.net",
+  database: "db_abece2_ecommerce",
+  options: {
+    encrypt: false,
+    trustServerCertificate: true,
+    enableArithAbort: true,
+  },
+};
+
+let poolPromise: Promise<ConnectionPool> | null = null;
+
+async function getPool(): Promise<ConnectionPool> {
+  if (!poolPromise) {
+    poolPromise = sql.connect(config);
+  }
+  return poolPromise;
+}
+
+export const getConnection = getPool;
+
+export async function getProducts(): Promise<Product[]> {
+  const pool = await getPool();
+
+  const result = await pool.request().query(`
+    SELECT id, Title, Title_ar, price, image, categoryId
+    FROM dbo.Products
+    ORDER BY id
+  `);
+
+  return result.recordset as Product[];
+}
+
+export async function getCategories(): Promise<Category[]> {
+  const pool = await getPool();
+
+  const result = await pool.request().query(`
+    SELECT id, name, name_ar
+    FROM dbo.Categories
+    ORDER BY id
+  `);
+
+  return result.recordset as Category[];
+}
+
+export async function getRestaurantInfo(): Promise<RestaurantInfo | null> {
+  const pool = await getPool();
+
+  const result = await pool.request().query(`
+    SELECT TOP 1 
+      id, 
+      name, name_ar, 
+      tagline, tagline_ar, 
+      logoUrl, 
+      phone, 
+      address, address_ar, 
+      email
+    FROM dbo.RestaurantInfo
+  `);
+
+  return result.recordset[0] || null;
+}
+
+export async function getAllProductsForAdmin(): Promise<Product[]> {
+  return getProducts();
+}
+
+export async function getAllCategoriesForAdmin(): Promise<Category[]> {
+  return getCategories();
+}
+
+export async function getRestaurantInfoForAdmin(): Promise<RestaurantInfo | null> {
+  return getRestaurantInfo();
+}
+
+
+export async function getAllOrdersWithDetails(
+  page: number = 1,
+  pageSize: number = 10,
+  period: string = "all"
+): Promise<{ orders: OrderDTO[]; totalCount: number }> {
+  const pool = await getPool();
+  const offset = (page - 1) * pageSize;
+
+  // Date Filter Logic
+  let dateCondition = "";
+  if (period === "today")
+    dateCondition = "AND o.created_at >= CAST(GETDATE() AS DATE)";
+  if (period === "week")
+    dateCondition = "AND o.created_at >= DATEADD(day, -7, GETDATE())";
+  if (period === "month")
+    dateCondition = "AND o.created_at >= DATEADD(month, -1, GETDATE())";
+
+  // Get Total Count
+  const countResult = await pool.request().query(`
+    SELECT COUNT(*) as count FROM dbo.Orders o WHERE 1=1 ${dateCondition}
+  `);
+  const totalCount = countResult.recordset[0].count;
+
+  // Main Query with Professional JOIN for Categories
+  const result = await pool.request().query(`
+    SELECT 
+      o.id,
+      o.paymentId,
+      o.customerName,
+      o.customerEmail,
+      o.customerPhone,
+      o.totalAmount,
+      o.status,
+      o.address as addressJson,
+      ISNULL(o.created_at, GETDATE()) as date, 
+      i.productName,
+      i.image as productImage,
+      -- Fetch Category Name via ProductId -> Products -> Categories
+      ISNULL(c.name, 'General') as categoryName, 
+      (SELECT COUNT(*) FROM dbo.OrderItems WHERE orderId = o.id) as itemsCount
+    FROM dbo.Orders o
+    OUTER APPLY (
+        SELECT TOP 1 oi.productName, oi.image, oi.productId
+        FROM dbo.OrderItems oi
+        WHERE oi.orderId = o.id
+    ) i
+    LEFT JOIN dbo.Products p ON p.id = i.productId
+    LEFT JOIN dbo.Categories c ON c.id = p.categoryId
+    WHERE 1=1 ${dateCondition}
+    ORDER BY o.created_at DESC
+    OFFSET ${offset} ROWS FETCH NEXT ${pageSize} ROWS ONLY
+  `);
+
+  return { orders: result.recordset as OrderDTO[], totalCount };
+}
+
+// --- 3. STATUS UPDATE FUNCTION ---
+export async function updateOrderStatusInDb(
+  orderId: number,
+  newStatus: string
+): Promise<boolean> {
+  const pool = await getPool();
+  try {
+    await pool
+      .request()
+      .input("id", sql.Int, orderId)
+      .input("status", sql.NVarChar, newStatus).query(`
+        UPDATE dbo.Orders 
+        SET status = @status, updated_at = GETDATE() 
+        WHERE id = @id
+      `);
+    return true;
+  } catch (e) {
+    console.error("Error updating status", e);
+    return false;
+  }
+}
+
+// --- 4. GET ITEMS FOR MODAL ---
+export async function getOrderItems(
+  orderId: number
+): Promise<OrderItemDetail[]> {
+  const pool = await getPool();
+  const result = await pool
+    .request()
+    .input("orderId", sql.Int, orderId)
+    .query(
+      `SELECT productName, quantity, price, image FROM dbo.OrderItems WHERE orderId = @orderId`
+    );
+  return result.recordset as OrderItemDetail[];
+}
+
+// --- 5. DASHBOARD STATS ---
+export async function getDashboardStats() {
+  const pool = await getPool();
+  const result = await pool.request().query(`
+    SELECT 
+      SUM(totalAmount) as totalRevenue,
+      COUNT(id) as totalOrders,
+      SUM(CASE WHEN status = 'DELIVERED' OR status = 'COMPLETED' THEN 1 ELSE 0 END) as completedOrders,
+      SUM(CASE WHEN status = 'PAID' OR status = 'CONFIRMED' THEN 1 ELSE 0 END) as confirmedOrders,
+      SUM(CASE WHEN status = 'CANCELLED' THEN 1 ELSE 0 END) as cancelledOrders
+    FROM dbo.Orders
+  `);
+
+  const row = result.recordset[0];
+  return {
+    totalRevenue: row.totalRevenue || 0,
+    totalOrders: row.totalOrders || 0,
+    completedOrders: row.completedOrders || 0,
+    confirmedOrders: row.confirmedOrders || 0,
+    cancelledOrders: row.cancelledOrders || 0,
+  };
+}
+
+
+=== D:\ecom-burger\ecom-burger-admin\lib\utils.ts ===
+import { clsx, type ClassValue } from "clsx"
+import { twMerge } from "tailwind-merge"
+
+
+
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs))
+}
+
+
+=== D:\ecom-burger\ecom-burger-admin\list-files.js ===
+const fs = require('fs');
+const path = require('path');
+
+// Folders to ignore
+const IGNORED_FOLDERS = new Set(['node_modules', '.next', 'dist', '.git', 'out', 'public', 'ui']);
+
+// Specific files to ignore
+const IGNORED_FILES = new Set(['README.md', 'package-lock.json', 'all_files.txt']);
+
+// File extensions to ignore (e.g., image types)
+const IGNORED_EXTENSIONS = new Set([
+    '.png', '.jpg', '.jpeg', '.gif', '.bmp', '.svg', '.webp', '.ico', '.tiff', '.psd', '.json', 'mjs'
+]);
+
+// Recursive function to get all files
+function listFiles(dirPath, fileList = []) {
+    const entries = fs.readdirSync(dirPath, { withFileTypes: true });
+
+    for (const entry of entries) {
+        const fullPath = path.join(dirPath, entry.name);
+
+        if (entry.isDirectory()) {
+            if (!IGNORED_FOLDERS.has(entry.name)) {
+                listFiles(fullPath, fileList);
+            }
+        } else {
+            const ext = path.extname(entry.name).toLowerCase();
+            if (!IGNORED_FILES.has(entry.name) && !IGNORED_EXTENSIONS.has(ext)) {
+                fileList.push(fullPath);
+            }
+        }
+    }
+
+    return fileList;
+}
+
+// ✅ Target directory (current folder)
+const targetDir = path.resolve(__dirname, './');
+const outputFile = path.join(__dirname, 'all_files.txt');
+
+const files = listFiles(targetDir);
+
+// Create write stream
+const writeStream = fs.createWriteStream(outputFile, { flags: 'w' });
+
+files.forEach(file => {
+    try {
+        const content = fs.readFileSync(file, 'utf8');
+        writeStream.write(`=== ${file} ===\n`);
+        writeStream.write(content + '\n\n');
+    } catch (err) {
+        writeStream.write(`Could not read file ${file}: ${err.message}\n\n`);
+    }
+});
+
+writeStream.end(() => {
+    console.log(`✅ All file names and contents written to: ${outputFile}`);
+});
+
+
+=== D:\ecom-burger\ecom-burger-admin\next-env.d.ts ===
+/// <reference types="next" />
+/// <reference types="next/image-types/global" />
+import "./.next/dev/types/routes.d.ts";
+
+// NOTE: This file should not be edited
+// see https://nextjs.org/docs/app/api-reference/config/typescript for more information.
+
+
+=== D:\ecom-burger\ecom-burger-admin\next.config.ts ===
+import type { NextConfig } from "next";
+
+const nextConfig: NextConfig = {
+  /* config options here */
+};
+
+export default nextConfig;
+
+
+=== D:\ecom-burger\ecom-burger-admin\postcss.config.mjs ===
+const config = {
+  plugins: ["@tailwindcss/postcss"],
+};
+
+export default config;
+
+
