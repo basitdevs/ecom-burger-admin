@@ -1,8 +1,23 @@
 "use client";
 
-import { Home, Inbox, Calendar, Search, Settings, Plus, Projector, User2, ChevronUp } from "lucide-react"; // ⬅️ removed Sidebar here
 import {
-  Sidebar,               // ⬅️ your real Sidebar from local file
+  Home,
+  Inbox,
+  Calendar,
+  Search,
+  Settings,
+  Plus,
+  Projector,
+  User2,
+  ChevronUp,
+  Users,
+  Receipt,
+  CreditCard,
+  ShoppingCart,
+  Package,
+} from "lucide-react"; // ⬅️ removed Sidebar here
+import {
+  Sidebar, // ⬅️ your real Sidebar from local file
   SidebarContent,
   SidebarFooter,
   SidebarGroup,
@@ -18,22 +33,56 @@ import {
 
 import Link from "next/link";
 import Image from "next/image";
-import { DropdownMenu, DropdownMenuItem, DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
+import {
+  DropdownMenu,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@radix-ui/react-dropdown-menu";
 import { DropdownMenuContent } from "./dropdown-menu";
 
 // ❌ remove: import { title } from "process"
 
 const items = [
-  { title: "Home", url: "/", icon: Home },
-  { title: "Inbox", url: "/inbox", icon: Inbox },
-  { title: "Calendar", url: "/calendar", icon: Calendar },
-  { title: "Search", url: "/search", icon: Search },
-  { title: "Settings", url: "/settings", icon: Settings },
+  {
+    title: "Home",
+    url: "/",
+    icon: Home,
+  },
+  {
+    title: "Products",
+    url: "/products",
+    icon: Package,
+  },
+  {
+    title: "Orders",
+    url: "/orders",
+    icon: ShoppingCart,
+  },
+  {
+    title: "Transactions",
+    url: "/transactions",
+    icon: CreditCard,
+  },
+  // {
+  //   title: "Invoices",
+  //   url: "/invoices",
+  //   icon: Receipt,
+  // },
+  {
+    title: "Customers",
+    url: "/customers",
+    icon: Users,
+  },
+  // {
+  //   title: "Settings",
+  //   url: "/settings",
+  //   icon: Settings,
+  // },
 ];
 
 const AppSideBar = () => {
   return (
-    <Sidebar  collapsible="icon">
+    <Sidebar collapsible="icon">
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
@@ -66,99 +115,55 @@ const AppSideBar = () => {
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
-{/*------------------------------------Side Bar Projects-----------------------------------------------------------*/}
-        <SidebarGroup>
-
-         <SidebarGroupLabel>Projects</SidebarGroupLabel>
-         <SidebarGroupAction>
-
-          <Plus /> <span className="sr-only">Add Project</span>
-
-         </SidebarGroupAction>
-         <SidebarGroupContent>
-
-              <SidebarMenu>
-
+        {/*------------------------------------Side Bar Projects-----------------------------------------------------------*/}
+        {/* <SidebarGroup>
+          <SidebarGroupLabel>Projects</SidebarGroupLabel>
+          <SidebarGroupAction>
+            <Plus /> <span className="sr-only">Add Project</span>
+          </SidebarGroupAction>
+          <SidebarGroupContent>
+            <SidebarMenu>
               <SidebarMenuItem>
-
-              <SidebarMenuButton asChild>
-
-              <Link href="#">
-              
-              <Projector/>
-              See All Projector
-              
-              
-              </Link>
-
-
-              </SidebarMenuButton>
-
-
-
+                <SidebarMenuButton asChild>
+                  <Link href="#">
+                    <Projector />
+                    See All Projector
+                  </Link>
+                </SidebarMenuButton>
               </SidebarMenuItem>
-
-
-
-              </SidebarMenu>
-
-
-
-
-         </SidebarGroupContent>
-
-        </SidebarGroup>
-
-
-
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup> */}
       </SidebarContent>
 
-    
-
-
-   
-      
-        <SidebarFooter>
-          <SidebarMenu>
-            <SidebarMenuItem>
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <SidebarMenuButton>
-                    <User2 /> Username
-                    <ChevronUp className="ml-auto" />
-                  </SidebarMenuButton>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent
-                  side="top"
-                  className="w-[--radix-popper-anchor-width]"
-                >
-                  <DropdownMenuItem>
-                    <span>Account</span>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem>
-                    <span>Billing</span>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem>
-                    <span>Sign out</span>
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </SidebarMenuItem>
-          </SidebarMenu>
-        </SidebarFooter>
-      
-
-
-
-
-
-    
-
-
-
-
-      
-      
+      <SidebarFooter>
+        {/* <SidebarMenu>
+          <SidebarMenuItem>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <SidebarMenuButton>
+                  <User2 /> Username
+                  <ChevronUp className="ml-auto" />
+                </SidebarMenuButton>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent
+                side="top"
+                className="w-[--radix-popper-anchor-width]"
+              >
+                <DropdownMenuItem>
+                  <span>Account</span>
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <span>Billing</span>
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <span>Sign out</span>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </SidebarMenuItem>
+        </SidebarMenu> */}
+      </SidebarFooter>
     </Sidebar>
   );
 };
