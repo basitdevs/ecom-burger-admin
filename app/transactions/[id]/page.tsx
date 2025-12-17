@@ -39,6 +39,10 @@ export default function TransactionDetailsPage() {
     fetchData();
   }, [id, router]);
 
+  const handleInvoiceClick = () => {
+    window.open(`/invoice/${id}`, '_blank');
+  };
+
   const getStatusStyles = (status: string) => {
     switch (status) {
       case 'PAID': 
@@ -87,10 +91,10 @@ export default function TransactionDetailsPage() {
         </div>
 
         <div className="flex gap-2">
-          <Button variant="outline" className="gap-2">
+          {/* <Button variant="outline" className="gap-2" onClick={handleInvoiceClick}>
             <Printer size={16} /> Print
-          </Button>
-          <Button className="gap-2 bg-primary text-primary-foreground">
+          </Button> */}
+          <Button className="gap-2 bg-primary text-primary-foreground" onClick={handleInvoiceClick}>
             <Download size={16} /> Invoice
           </Button>
         </div>

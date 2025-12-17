@@ -1,15 +1,14 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation'; // Added for navigation
+import { useRouter } from 'next/navigation'; 
 import { 
-  Calendar, Clock, ChevronsRight, ChevronsLeft,
-  Fish, ShoppingBag, Layers, Sun, MoreHorizontal
+  Clock, ChevronsRight, ChevronsLeft,
+  ShoppingBag, MoreHorizontal
 } from 'lucide-react';
 
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
@@ -28,7 +27,7 @@ import { toast } from "sonner";
 import { format } from 'date-fns';
 
 const TransactionsPage = () => {
-  const router = useRouter(); // Initialize router
+  const router = useRouter(); 
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 8;
   const [transactions, setTransactions] = useState<any[]>([]);
@@ -51,7 +50,6 @@ const TransactionsPage = () => {
     fetchTransactions();
   }, []);
 
-  // Pagination Logic
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentTransactions = transactions.slice(indexOfFirstItem, indexOfLastItem);
@@ -71,22 +69,24 @@ const TransactionsPage = () => {
   const handleNextPage = () => { if (currentPage < totalPages) setCurrentPage(prev => prev + 1); };
   const handlePrevPage = () => { if (currentPage > 1) setCurrentPage(prev => prev - 1); };
   
-  // Navigate to details page
   const handleRowClick = (id: number) => {
     router.push(`/transactions/${id}`);
+  };
+
+  // --- Invoice Link ---
+  const handleInvoiceClick = (id: number) => {
+    window.open(`/invoice/${id}`, '_blank');
   };
 
   return (
     <div className="min-h-screen w-full bg-background p-4 md:p-8 font-sans text-foreground">
       
-      {/* Header */}
       <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-6 gap-6">
         <div>
             <h1 className="text-3xl font-bold tracking-tight mb-1">Transactions</h1>
             <p className="text-muted-foreground">Monitor your orders and payments in real-time.</p>
         </div>
         
-        {/* Simple Controls */}
         <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center w-full lg:w-auto justify-between lg:justify-end">
           <div className="bg-muted border border-border rounded-md px-4 py-2 text-sm font-bold min-w-[150px] text-center">
             Total: {transactions.length}
@@ -128,12 +128,9 @@ const TransactionsPage = () => {
                 currentTransactions.map((item, index) => (
                 <TableRow 
                     key={index} 
-                    // Add cursor-pointer and click handler
                     className="border-b border-border hover:bg-muted/50 transition-colors cursor-pointer"
                     onClick={() => handleRowClick(item.id)}
                 >
-                  
-                  {/* Date */}
                   <TableCell className="py-4">
                     <div className="flex items-center gap-2">
                         <Clock size={16} className="text-primary hidden sm:block" />
@@ -144,12 +141,10 @@ const TransactionsPage = () => {
                     </div>
                   </TableCell>
                   
-                  {/* Payment ID */}
                   <TableCell className="font-mono text-xs hidden sm:table-cell text-muted-foreground">
                     {item.paymentId}
                   </TableCell>
                   
-                  {/* Method */}
                   <TableCell className="hidden md:table-cell">
                     <div className="flex items-center gap-2">
                        <div className="w-8 h-8 rounded bg-background border border-border flex items-center justify-center">
@@ -159,20 +154,15 @@ const TransactionsPage = () => {
                     </div>
                   </TableCell>
                   
-                  {/* Status */}
                   <TableCell>
                     <Badge className={`border shadow-none px-2 py-1 text-[10px] sm:text-xs whitespace-nowrap ${getStatusStyles(item.status)}`}>
                       {item.status}
                     </Badge>
                   </TableCell>
                   
-                  {/* Country */}
                   <TableCell className="hidden lg:table-cell">{item.country}</TableCell>
-                  
-                  {/* Currency */}
                   <TableCell className="hidden xl:table-cell">{item.curr}</TableCell>
                   
-                  {/* Amount */}
                   <TableCell className="font-bold text-sm sm:text-lg text-right whitespace-nowrap">
                     {item.total.toFixed(3)}
                   </TableCell>
@@ -189,8 +179,8 @@ const TransactionsPage = () => {
                             <DropdownMenuItem onClick={(e) => { e.stopPropagation(); handleRowClick(item.id); }}>
                                 View Details
                             </DropdownMenuItem>
-                            <DropdownMenuItem onClick={(e) => e.stopPropagation()}>
-                                Print Receipt
+                            <DropdownMenuItem onClick={(e) => { e.stopPropagation(); handleInvoiceClick(item.id); }}>
+                                Download Invoice
                             </DropdownMenuItem>
                         </DropdownMenuContent>
                     </DropdownMenu>
@@ -202,7 +192,6 @@ const TransactionsPage = () => {
         </div>
       </Card>
 
-      {/* Pagination */}
       <div className="mt-6 flex items-center justify-end gap-2">
         <Button 
             variant="outline" 
