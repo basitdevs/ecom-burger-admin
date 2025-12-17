@@ -1,15 +1,10 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation'; // Added for navigation
 import { 
-  Calendar, 
-  Clock, 
-  ChevronsRight, 
-  ChevronsLeft,
-  Fish,       // For Whale logo
-  ShoppingBag, // For Albo logo
-  Layers,     // For Ecom logo
-  Sun         // For Delight logo
+  Calendar, Clock, ChevronsRight, ChevronsLeft,
+  Fish, ShoppingBag, Layers, Sun, MoreHorizontal
 } from 'lucide-react';
 
 import { Button } from "@/components/ui/button";
@@ -17,450 +12,218 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
+  Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from "@/components/ui/table";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
+  Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "@/components/ui/select";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
+import { toast } from "sonner";
+import { format } from 'date-fns';
 
 const TransactionsPage = () => {
-  
-  // --- 1. State for Pagination ---
+  const router = useRouter(); // Initialize router
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 6;
+  const itemsPerPage = 8;
+  const [transactions, setTransactions] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  // --- 2. Mock Data ---
-  const allTransactions = [
-    {
-      id: 1,
-      date: '24/11/2025',
-      time: '12:34 PM',
-      seller: 'Whale',
-      logoIcon: <Fish size={20} className="text-[#3b82f6]" />, 
-      logoBg: 'bg-white',
-      sku: '94781',
-      method: 'Mastercard',
-      type: 'Payment',
-      status: 'APPROVED',
-      country: 'France',
-      curr: 'OMR',
-      fee: '3242.57',
-      tax: '0.3',
-      total: '$3232.84'
-    },
-    {
-      id: 2,
-      date: '16/11/2025',
-      time: '07:00 AM',
-      seller: 'Albo E-Store',
-      logoIcon: <ShoppingBag size={20} className="text-black" />,
-      logoBg: 'bg-white',
-      sku: '68368',
-      method: 'Visa',
-      type: 'Withdrawal',
-      status: 'WAITING',
-      country: 'USA',
-      curr: 'GNF',
-      fee: '5410.06',
-      tax: '1.0',
-      total: '$5355.96'
-    },
-    {
-      id: 3,
-      date: '08/11/2025',
-      time: '07:40 PM',
-      seller: 'Ecom',
-      logoIcon: <Layers size={20} className="text-[#fb923c]" />,
-      logoBg: 'bg-white',
-      sku: '37567',
-      method: 'Visa',
-      type: 'Invoice',
-      status: 'APPROVED',
-      country: 'USA',
-      curr: 'BGN',
-      fee: '1435.79',
-      tax: '0.2',
-      total: '$1432.92'
-    },
-    {
-      id: 4,
-      date: '07/11/2025',
-      time: '04:01 PM',
-      seller: 'Delight',
-      logoIcon: <Sun size={20} className="text-[#84cc16]" />,
-      logoBg: 'bg-white',
-      sku: '55115',
-      method: 'Switch',
-      type: 'Payment',
-      status: 'CANCELLED',
-      country: 'Italy',
-      curr: 'RWF',
-      fee: '5548.04',
-      tax: '0.3',
-      total: '$5531.40'
-    },
-    {
-      id: 5,
-      date: '15/09/2025',
-      time: '01:42 PM',
-      seller: 'Albo E-Store',
-      logoIcon: <ShoppingBag size={20} className="text-black" />,
-      logoBg: 'bg-white',
-      sku: '28821',
-      method: 'Mastercard',
-      type: 'Withdrawal',
-      status: 'APPROVED',
-      country: 'Sweden',
-      curr: 'MYR',
-      fee: '9597.92',
-      tax: '0.5',
-      total: '$9549.93'
-    },
-    {
-      id: 6,
-      date: '04/09/2025',
-      time: '07:40 PM',
-      seller: 'Delight',
-      logoIcon: <Sun size={20} className="text-[#84cc16]" />,
-      logoBg: 'bg-white',
-      sku: '13236',
-      method: 'Visa',
-      type: 'Deposit',
-      status: 'REJECTED',
-      country: 'USA',
-      curr: 'SLE',
-      fee: '9667.23',
-      tax: '0.3',
-      total: '$9638.23'
-    },
-    // Page 2 Data
-    {
-      id: 7,
-      date: '01/09/2025',
-      time: '10:00 AM',
-      seller: 'Whale',
-      logoIcon: <Fish size={20} className="text-[#3b82f6]" />,
-      logoBg: 'bg-white',
-      sku: '88421',
-      method: 'Paypal',
-      type: 'Payment',
-      status: 'APPROVED',
-      country: 'Germany',
-      curr: 'EUR',
-      fee: '120.00',
-      tax: '0.1',
-      total: '$150.00'
-    },
-    {
-      id: 8,
-      date: '30/08/2025',
-      time: '02:15 PM',
-      seller: 'Ecom',
-      logoIcon: <Layers size={20} className="text-[#fb923c]" />,
-      logoBg: 'bg-white',
-      sku: '33211',
-      method: 'Visa',
-      type: 'Invoice',
-      status: 'WAITING',
-      country: 'Canada',
-      curr: 'CAD',
-      fee: '500.00',
-      tax: '0.5',
-      total: '$550.00'
-    },
-    {
-      id: 9,
-      date: '25/08/2025',
-      time: '09:30 AM',
-      seller: 'Albo E-Store',
-      logoIcon: <ShoppingBag size={20} className="text-black" />,
-      logoBg: 'bg-white',
-      sku: '77482',
-      method: 'Mastercard',
-      type: 'Withdrawal',
-      status: 'CANCELLED',
-      country: 'UK',
-      curr: 'GBP',
-      fee: '2300.00',
-      tax: '0.8',
-      total: '$2350.00'
-    },
-    {
-      id: 10,
-      date: '20/08/2025',
-      time: '06:45 PM',
-      seller: 'Delight',
-      logoIcon: <Sun size={20} className="text-[#84cc16]" />,
-      logoBg: 'bg-white',
-      sku: '66554',
-      method: 'Amex',
-      type: 'Payment',
-      status: 'APPROVED',
-      country: 'Spain',
-      curr: 'EUR',
-      fee: '890.00',
-      tax: '0.2',
-      total: '$910.00'
-    },
-    {
-      id: 11,
-      date: '15/08/2025',
-      time: '11:20 AM',
-      seller: 'Whale',
-      logoIcon: <Fish size={20} className="text-[#3b82f6]" />,
-      logoBg: 'bg-white',
-      sku: '55441',
-      method: 'Visa',
-      type: 'Refund',
-      status: 'APPROVED',
-      country: 'France',
-      curr: 'EUR',
-      fee: '50.00',
-      tax: '0.0',
-      total: '$50.00'
-    },
-    {
-      id: 12,
-      date: '10/08/2025',
-      time: '03:50 PM',
-      seller: 'Ecom',
-      logoIcon: <Layers size={20} className="text-[#fb923c]" />,
-      logoBg: 'bg-white',
-      sku: '22331',
-      method: 'Mastercard',
-      type: 'Payment',
-      status: 'REJECTED',
-      country: 'USA',
-      curr: 'USD',
-      fee: '1200.00',
-      tax: '0.4',
-      total: '$1240.00'
+  const fetchTransactions = async () => {
+    setLoading(true);
+    try {
+      const res = await fetch('/api/transactions');
+      const data = await res.json();
+      if(Array.isArray(data)) setTransactions(data);
+    } catch(e) {
+      toast.error("Failed to load transactions");
+    } finally {
+      setLoading(false);
     }
-  ];
+  };
 
-  // --- 3. Pagination Logic ---
+  useEffect(() => {
+    fetchTransactions();
+  }, []);
+
+  // Pagination Logic
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentTransactions = allTransactions.slice(indexOfFirstItem, indexOfLastItem);
-  const totalPages = Math.ceil(allTransactions.length / itemsPerPage);
+  const currentTransactions = transactions.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(transactions.length / itemsPerPage);
 
-  // --- Helper for Status Styles ---
   const getStatusStyles = (status: string) => {
     switch (status) {
-      case 'APPROVED':
-        return 'bg-[#3b82f6] text-white hover:bg-[#3b82f6]'; 
-      case 'WAITING':
-        return 'bg-[#10b981] text-[#020617] hover:bg-[#10b981]'; 
-      case 'CANCELLED':
-        return 'bg-[#ef4444] text-white hover:bg-[#ef4444]'; 
-      case 'REJECTED':
-        return 'bg-[#9ca3af] text-[#020617] hover:bg-[#9ca3af]'; 
-      default:
-        return 'bg-gray-500 text-white';
+      case 'PAID': 
+      case 'APPROVED': return 'bg-blue-500/15 text-blue-600 border-blue-200 dark:border-blue-900'; 
+      case 'DELIVERED': 
+      case 'COMPLETED': return 'bg-green-500/15 text-green-600 border-green-200 dark:border-green-900'; 
+      case 'CANCELLED': return 'bg-red-500/15 text-red-600 border-red-200 dark:border-red-900'; 
+      default: return 'bg-muted text-foreground';
     }
   };
 
-  // --- Handlers ---
-  const handleNextPage = () => {
-    if (currentPage < totalPages) setCurrentPage(prev => prev + 1);
-  };
-
-  const handlePrevPage = () => {
-    if (currentPage > 1) setCurrentPage(prev => prev - 1);
-  };
-
-  const handlePageClick = (pageNumber: number) => {
-    setCurrentPage(pageNumber);
+  const handleNextPage = () => { if (currentPage < totalPages) setCurrentPage(prev => prev + 1); };
+  const handlePrevPage = () => { if (currentPage > 1) setCurrentPage(prev => prev - 1); };
+  
+  // Navigate to details page
+  const handleRowClick = (id: number) => {
+    router.push(`/transactions/${id}`);
   };
 
   return (
-    <div className="min-h-screen w-full bg-[#020617] p-4 md:p-8 font-sans text-slate-300">
+    <div className="min-h-screen w-full bg-background p-4 md:p-8 font-sans text-foreground">
       
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
-        
-        <div className="flex flex-col gap-2 w-full md:w-auto">
-          <label className="text-white font-bold text-lg">Transaction date from:</label>
-          <div className="relative w-full md:w-[280px]">
-            <Input 
-              type="text" 
-              value="01/01/2025 - 14/12/2025" 
-              readOnly
-              className="bg-[#0b1b36] border-slate-700 text-white text-sm font-bold rounded-md py-6 pl-4 pr-12 w-full focus-visible:ring-offset-0 focus-visible:ring-0 focus:border-blue-500 transition"
-            />
-            <Calendar className="absolute right-4 top-3.5 text-[#3b82f6]" size={18} />
-          </div>
+      {/* Header */}
+      <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-6 gap-6">
+        <div>
+            <h1 className="text-3xl font-bold tracking-tight mb-1">Transactions</h1>
+            <p className="text-muted-foreground">Monitor your orders and payments in real-time.</p>
         </div>
-
-        <div className="flex flex-col gap-2 items-start md:items-end w-full md:w-auto">
-          <span className="text-slate-400 text-sm font-medium">
-            View transactions: {currentTransactions.length}/{allTransactions.length}
-          </span>
+        
+        {/* Simple Controls */}
+        <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center w-full lg:w-auto justify-between lg:justify-end">
+          <div className="bg-muted border border-border rounded-md px-4 py-2 text-sm font-bold min-w-[150px] text-center">
+            Total: {transactions.length}
+          </div>
           <Select defaultValue="recent">
-            <SelectTrigger className="w-full md:w-[180px] bg-[#0b1b36] border-slate-700 text-white text-sm font-medium h-[42px]">
-              <SelectValue placeholder="Select view" />
+            <SelectTrigger className="w-full sm:w-[180px] bg-card border-border">
+              <SelectValue placeholder="Sort View" />
             </SelectTrigger>
-            <SelectContent className="bg-[#0b1b36] border-slate-700 text-white">
-              <SelectItem value="recent">Recent</SelectItem>
-              <SelectItem value="oldest">Oldest</SelectItem>
+            <SelectContent>
+              <SelectItem value="recent">Most Recent</SelectItem>
+              <SelectItem value="oldest">Oldest First</SelectItem>
             </SelectContent>
           </Select>
         </div>
       </div>
 
-      <Card className="w-full bg-[#031123] rounded-lg border-slate-800/50 shadow-xl overflow-hidden border">
-        <div className="overflow-x-auto w-full">
+      <Card className="w-full bg-card rounded-lg border-border shadow-md overflow-hidden border">
+        <div className="w-full">
           <Table className="w-full">
             <TableHeader>
-              <TableRow className="border-b border-slate-800 hover:bg-transparent">
-                <TableHead className="py-5 px-6 text-left text-[11px] font-bold text-[#3b82f6] uppercase tracking-wider whitespace-nowrap">
-                  Date & Time
-                </TableHead>
-
-                <TableHead className="py-5 px-6 text-left text-[11px] font-bold text-[#3b82f6] uppercase tracking-wider whitespace-nowrap">
-                  Seller
-                </TableHead>
-
-                <TableHead className="py-5 px-6 text-left text-[11px] font-bold text-[#3b82f6] uppercase tracking-wider hidden xl:table-cell">
-                  Sku
-                </TableHead>
-
-                <TableHead className="py-5 px-6 text-left text-[11px] font-bold text-[#3b82f6] uppercase tracking-wider hidden xl:table-cell">
-                  Method
-                </TableHead>
-
-                <TableHead className="py-5 px-6 text-left text-[11px] font-bold text-[#3b82f6] uppercase tracking-wider whitespace-nowrap">
-                  Type
-                </TableHead>
-
-                <TableHead className="py-5 px-6 text-left text-[11px] font-bold text-[#3b82f6] uppercase tracking-wider">
-                  Status
-                </TableHead>
-
-                <TableHead className="py-5 px-6 text-left text-[11px] font-bold text-[#3b82f6] uppercase tracking-wider hidden xl:table-cell">
-                  Country
-                </TableHead>
-
-                <TableHead className="py-5 px-6 text-left text-[11px] font-bold text-[#3b82f6] uppercase tracking-wider hidden xl:table-cell">
-                  Curr
-                </TableHead>
-
-                <TableHead className="py-5 px-6 text-left text-[11px] font-bold text-[#3b82f6] uppercase tracking-wider hidden xl:table-cell">
-                  Fee
-                </TableHead>
-
-                <TableHead className="py-5 px-6 text-left text-[11px] font-bold text-[#3b82f6] uppercase tracking-wider hidden xl:table-cell">
-                  Tax
-                </TableHead>
-
-                <TableHead className="py-5 px-6 text-left text-[11px] font-bold text-[#3b82f6] uppercase tracking-wider">
-                  Total
-                </TableHead>
+              <TableRow className="border-b border-border hover:bg-transparent">
+                <TableHead className="py-4 whitespace-nowrap">Date</TableHead>
+                <TableHead className="hidden sm:table-cell whitespace-nowrap">Payment ID</TableHead>
+                <TableHead className="hidden md:table-cell whitespace-nowrap">Method</TableHead>
+                <TableHead>Status</TableHead>
+                <TableHead className="hidden lg:table-cell">Country</TableHead>
+                <TableHead className="hidden xl:table-cell">Currency</TableHead>
+                <TableHead className="text-right">Amount</TableHead>
+                <TableHead className="text-right w-[50px]"></TableHead>
               </TableRow>
             </TableHeader>
 
             <TableBody>
-              {currentTransactions.map((item, index) => (
+              {loading ? (
+                 <TableRow><TableCell colSpan={8} className="text-center h-32">Loading Transactions...</TableCell></TableRow>
+              ) : currentTransactions.length === 0 ? (
+                 <TableRow><TableCell colSpan={8} className="text-center h-32">No transactions found.</TableCell></TableRow>
+              ) : (
+                currentTransactions.map((item, index) => (
                 <TableRow 
-                  key={item.id} 
-                  className={cn(
-                    "border-b border-slate-800/50 transition-colors group hover:bg-[#0b1b36]/80",
-                    index % 2 === 0 ? "bg-[#0b1b36]" : "bg-transparent"
-                  )}
+                    key={index} 
+                    // Add cursor-pointer and click handler
+                    className="border-b border-border hover:bg-muted/50 transition-colors cursor-pointer"
+                    onClick={() => handleRowClick(item.id)}
                 >
-                  <TableCell className="py-5 px-6 whitespace-nowrap">
-                    <div className="flex items-start gap-2.5">
-                      <Clock size={16} className="text-[#3b82f6] mt-1 shrink-0" />
-                      <div className="flex flex-col">
-                        <span className="text-white font-bold text-sm">{item.date}</span>
-                        <span className="text-slate-400 text-xs font-medium mt-0.5">at {item.time}</span>
-                      </div>
+                  
+                  {/* Date */}
+                  <TableCell className="py-4">
+                    <div className="flex items-center gap-2">
+                        <Clock size={16} className="text-primary hidden sm:block" />
+                        <div className="flex flex-col">
+                            <span className="font-bold text-sm whitespace-nowrap">{format(new Date(item.date), 'MMM dd')}</span>
+                            <span className="text-xs text-muted-foreground whitespace-nowrap">{format(new Date(item.date), 'hh:mm a')}</span>
+                        </div>
                     </div>
                   </TableCell>
-
-                  <TableCell className="py-5 px-6">
-                    <div className="flex items-center gap-3">
-                      <div className={`w-10 h-10 rounded-lg ${item.logoBg} flex items-center justify-center shrink-0`}>
-                        {item.logoIcon}
-                      </div>
-                      <span className="text-white font-bold text-sm">{item.seller}</span>
+                  
+                  {/* Payment ID */}
+                  <TableCell className="font-mono text-xs hidden sm:table-cell text-muted-foreground">
+                    {item.paymentId}
+                  </TableCell>
+                  
+                  {/* Method */}
+                  <TableCell className="hidden md:table-cell">
+                    <div className="flex items-center gap-2">
+                       <div className="w-8 h-8 rounded bg-background border border-border flex items-center justify-center">
+                          <ShoppingBag size={14} />
+                       </div>
+                       <span className="text-sm">{item.method}</span>
                     </div>
                   </TableCell>
-
-                  <TableCell className="py-5 px-6 text-white font-medium text-sm hidden xl:table-cell">{item.sku}</TableCell>
-
-                  <TableCell className="py-5 px-6 text-white font-medium text-sm hidden xl:table-cell">{item.method}</TableCell>
-
-                  <TableCell className="py-5 px-6 text-white font-medium text-sm">{item.type}</TableCell>
-
-                  <TableCell className="py-5 px-6">
-                    <Badge className={`px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wide border-none shadow-none ${getStatusStyles(item.status)}`}>
+                  
+                  {/* Status */}
+                  <TableCell>
+                    <Badge className={`border shadow-none px-2 py-1 text-[10px] sm:text-xs whitespace-nowrap ${getStatusStyles(item.status)}`}>
                       {item.status}
                     </Badge>
                   </TableCell>
+                  
+                  {/* Country */}
+                  <TableCell className="hidden lg:table-cell">{item.country}</TableCell>
+                  
+                  {/* Currency */}
+                  <TableCell className="hidden xl:table-cell">{item.curr}</TableCell>
+                  
+                  {/* Amount */}
+                  <TableCell className="font-bold text-sm sm:text-lg text-right whitespace-nowrap">
+                    {item.total.toFixed(3)}
+                  </TableCell>
 
-                  <TableCell className="py-5 px-6 text-white font-medium text-sm hidden xl:table-cell">{item.country}</TableCell>
-
-                  <TableCell className="py-5 px-6 text-white font-medium text-sm hidden xl:table-cell">{item.curr}</TableCell>
-
-                  <TableCell className="py-5 px-6 text-slate-300 font-medium text-sm hidden xl:table-cell">{item.fee}</TableCell>
-
-                  <TableCell className="py-5 px-6 text-slate-300 font-medium text-sm hidden xl:table-cell">{item.tax}</TableCell>
-
-                  <TableCell className="py-5 px-6 text-white font-bold text-sm">{item.total}</TableCell>
+                  {/* Actions Dropdown */}
+                  <TableCell className="text-right">
+                    <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" className="h-8 w-8 p-0" onClick={(e) => e.stopPropagation()}>
+                                <MoreHorizontal className="h-4 w-4" />
+                            </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                            <DropdownMenuItem onClick={(e) => { e.stopPropagation(); handleRowClick(item.id); }}>
+                                View Details
+                            </DropdownMenuItem>
+                            <DropdownMenuItem onClick={(e) => e.stopPropagation()}>
+                                Print Receipt
+                            </DropdownMenuItem>
+                        </DropdownMenuContent>
+                    </DropdownMenu>
+                  </TableCell>
                 </TableRow>
-              ))}
+              )))}
             </TableBody>
           </Table>
         </div>
       </Card>
 
-      <div className="mt-6 flex items-center gap-2">
-        {currentPage > 1 && (
-            <Button 
-                variant="outline" 
-                onClick={handlePrevPage}
-                className="w-9 h-9 p-0 border-slate-700 bg-transparent text-[#3b82f6] hover:bg-slate-800 hover:text-[#3b82f6]"
-            >
-                <ChevronsLeft size={18} />
-            </Button>
-        )}
-
-        {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-          <Button
-            key={page}
-            onClick={() => handlePageClick(page)}
-            variant={currentPage === page ? "default" : "outline"}
-            className={`w-9 h-9 p-0 text-bold text-sm shadow-lg transition
-              ${currentPage === page 
-                ? 'bg-[#3b82f6] text-white shadow-blue-900/50 hover:bg-[#2563eb]' 
-                : 'border-slate-700 bg-transparent text-slate-400 hover:bg-slate-800 hover:text-slate-300'
-              }`}
-          >
-            {page}
-          </Button>
-        ))}
-
+      {/* Pagination */}
+      <div className="mt-6 flex items-center justify-end gap-2">
         <Button 
             variant="outline" 
-            onClick={handleNextPage}
-            disabled={currentPage === totalPages}
-            className={`w-9 h-9 p-0 border-slate-700 bg-transparent text-[#3b82f6] hover:bg-slate-800 hover:text-[#3b82f6] 
-                ${currentPage === totalPages ? 'opacity-50 cursor-not-allowed' : ''}`}
+            onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+            disabled={currentPage === 1}
+            size="icon"
+            className="border-border h-8 w-8"
         >
-          <ChevronsRight size={18} />
+            <ChevronsLeft size={16} />
+        </Button>
+        <span className="text-sm text-muted-foreground">Page {currentPage} of {totalPages || 1}</span>
+        <Button 
+            variant="outline" 
+            onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+            disabled={currentPage === totalPages || totalPages === 0}
+            size="icon"
+            className="border-border h-8 w-8"
+        >
+          <ChevronsRight size={16} />
         </Button>
       </div>
-
     </div>
   );
 };

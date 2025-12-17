@@ -42,7 +42,7 @@ export interface ShippingDetails {
 }
 
 export interface OrderItemInput {
-  id?: number; // <--- ADDED THIS (The Product ID)
+  id?: number;
   Title: string;
   Title_ar?: string;
   qty: number;
@@ -91,6 +91,32 @@ export interface OrderItemDetail {
   image: string;
 }
 
+export interface Customer {
+  id: number;
+  name: string;
+  email: string;
+  mobile: string;
+  country: string;
+  ordersCount?: number;
+  totalSpent?: number;
+}
+
+export interface Transaction {
+  id: number;
+  paymentId: string;
+  date: Date;
+  seller: string;
+  sku: string;
+  method: string;
+  type: string;
+  status: string;
+  country: string;
+  curr: string;
+  fee: number;
+  tax: number;
+  total: number;
+}
+
 const config: SQLConfig = {
   user: "db_abece2_ecommerce_admin",
   password: "Mobark12.",
@@ -124,6 +150,16 @@ export async function getProducts(): Promise<Product[]> {
   `);
 
   return result.recordset as Product[];
+}
+
+// Get Single Product by ID
+export async function getProductById(id: number): Promise<Product | null> {
+  const pool = await getPool();
+  const result = await pool.request()
+    .input("id", sql.Int, id)
+    .query("SELECT * FROM Products WHERE id = @id");
+
+  return result.recordset[0] || null;
 }
 
 export async function getCategories(): Promise<Category[]> {
@@ -225,7 +261,7 @@ export async function getAllOrdersWithDetails(
   return { orders: result.recordset as OrderDTO[], totalCount };
 }
 
-// --- 3. STATUS UPDATE FUNCTION ---
+// 3. STATUS UPDATE FUNCTION
 export async function updateOrderStatusInDb(
   orderId: number,
   newStatus: string
@@ -247,7 +283,7 @@ export async function updateOrderStatusInDb(
   }
 }
 
-// --- 4. GET ITEMS FOR MODAL ---
+// 4. GET ITEMS FOR MODAL
 export async function getOrderItems(
   orderId: number
 ): Promise<OrderItemDetail[]> {
@@ -261,7 +297,7 @@ export async function getOrderItems(
   return result.recordset as OrderItemDetail[];
 }
 
-// --- 5. DASHBOARD STATS ---
+// 5. DASHBOARD STATS
 export async function getDashboardStats() {
   const pool = await getPool();
   const result = await pool.request().query(`
@@ -281,5 +317,144 @@ export async function getDashboardStats() {
     completedOrders: row.completedOrders || 0,
     confirmedOrders: row.confirmedOrders || 0,
     cancelledOrders: row.cancelledOrders || 0,
+  };
+}
+
+// 6. Customers
+export async function getCustomers(): Promise<Customer[]> {
+  const pool = await getConnection();
+
+  const result = await pool.request().query(`
+    SELECT 
+      s.id, s.name, s.email, s.mobile, s.country,
+      COUNT(o.id) as ordersCount,
+      ISNULL(SUM(o.totalAmount), 0) as totalSpent
+    FROM signup s
+    LEFT JOIN Orders o ON s.email = o.customerEmail
+    GROUP BY s.id, s.name, s.email, s.mobile, s.country
+    ORDER BY s.id DESC
+  `);
+  return result.recordset as Customer[];
+}
+
+
+// Get Single Customer Details
+export async function getCustomerDetails(id: number) {
+  const pool = await getConnection();
+
+  // 1. Get Customer Profile
+  const profileResult = await pool.request()
+    .input("id", sql.Int, id)
+    .query(`
+      SELECT id, name, email, mobile, country
+      FROM signup
+      WHERE id = @id
+    `);
+
+  const customer = profileResult.recordset[0];
+  if (!customer) return null;
+
+  // 2. Get Order History using their email
+  const ordersResult = await pool.request()
+    .input("email", sql.NVarChar, customer.email)
+    .query(`
+      SELECT 
+        id, 
+        paymentId, 
+        created_at, 
+        totalAmount, 
+        status
+      FROM Orders
+      WHERE customerEmail = @email
+      ORDER BY created_at DESC
+    `);
+
+  // Calculate totals
+  const orders = ordersResult.recordset;
+  const totalSpent = orders.reduce((sum: number, order: any) => sum + order.totalAmount, 0);
+
+  return {
+    ...customer,
+    totalSpent,
+    ordersCount: orders.length,
+    orders
+  };
+}
+
+// 7. Transactions
+export async function getTransactions(): Promise<Transaction[]> {
+  const pool = await getConnection();
+  // Mapping Orders to Transactions for display purposes
+  const result = await pool.request().query(`
+    SELECT 
+      id,
+      paymentId,
+      created_at as date,
+      'Ecom-Burger' as seller,
+      'SKU-' + CAST(id AS VARCHAR) as sku,
+      'Credit Card' as method,
+      'Payment' as type,
+      status,
+      'Kuwait' as country,
+      'KWD' as curr,
+      0.100 as fee,
+      0.000 as tax,
+      totalAmount as total
+    FROM Orders
+    ORDER BY created_at DESC
+  `);
+  return result.recordset as Transaction[];
+}
+
+// 7. Get Single Transaction Details
+export async function getTransactionDetails(id: number) {
+  const pool = await getConnection();
+
+  // 1. Fetch Order Details
+  const orderResult = await pool.request()
+    .input("id", sql.Int, id)
+    .query(`
+      SELECT 
+        o.id,
+        o.paymentId,
+        o.created_at as date,
+        o.status,
+        o.customerName,
+        o.customerEmail,
+        o.customerPhone,
+        o.address as addressJson,
+        o.totalAmount,
+        'Credit Card' as paymentMethod -- Mocked as schema doesn't store method
+      FROM dbo.Orders o
+      WHERE o.id = @id
+    `);
+
+  const order = orderResult.recordset[0];
+
+  if (!order) return null;
+
+  // 2. Fetch Order Items
+  const itemsResult = await pool.request()
+    .input("orderId", sql.Int, id)
+    .query(`
+      SELECT 
+        productName,
+        quantity,
+        price,
+        image
+      FROM dbo.OrderItems
+      WHERE orderId = @orderId
+    `);
+
+  // 3. Parse Address safely
+  let shippingInfo = {};
+  try {
+    shippingInfo = JSON.parse(order.addressJson);
+  } catch (e) { /* ignore */ }
+
+  return {
+    ...order,
+    items: itemsResult.recordset,
+    shippingInfo
   };
 }

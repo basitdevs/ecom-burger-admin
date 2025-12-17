@@ -15,6 +15,7 @@ import {
   CreditCard,
   ShoppingCart,
   Package,
+  List,
 } from "lucide-react"; // ⬅️ removed Sidebar here
 import {
   Sidebar, // ⬅️ your real Sidebar from local file
@@ -52,6 +53,11 @@ const items = [
     title: "Products",
     url: "/products",
     icon: Package,
+  },
+  {
+    title: "Categories",
+    url: "/categories",
+    icon: List,
   },
   {
     title: "Orders",

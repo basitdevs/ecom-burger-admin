@@ -120,3 +120,18 @@
     @apply bg-background text-foreground;
   }
 }
+
+@layer utilities {
+  .bg-midnight {
+    background-color: #020617;
+  }
+  .bg-midnight-card {
+    background-color: #031123;
+  }
+  .border-midnight {
+    border-color: #1e293b;
+  }
+  .text-midnight-muted {
+    color: #94a3b8;
+  }
+}
