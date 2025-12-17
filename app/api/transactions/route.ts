@@ -13,7 +13,7 @@ export async function GET() {
         'Ecom-Burger' as seller,
         'Credit Card' as method,
         'Payment' as type,
-        status,
+         status,
         'Kuwait' as country,
         'KWD' as curr,
         totalAmount as total
