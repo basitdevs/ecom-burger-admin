@@ -2,16 +2,29 @@
 
 import React, { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { 
-  ArrowLeft, Printer, Download, CreditCard, 
-  Calendar, User, MapPin, Mail, Phone, Package 
+import {
+  ArrowLeft,
+  Printer,
+  Download,
+  CreditCard,
+  Calendar,
+  User,
+  MapPin,
+  Mail,
+  Phone,
+  Package,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import {
-  Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
 } from "@/components/ui/table";
 import { format } from "date-fns";
 import { toast } from "sonner";
@@ -40,17 +53,21 @@ export default function TransactionDetailsPage() {
   }, [id, router]);
 
   const handleInvoiceClick = () => {
-    window.open(`/invoice/${id}`, '_blank');
+    window.open(`/invoice/${id}`, "_blank");
   };
 
   const getStatusStyles = (status: string) => {
     switch (status) {
-      case 'PAID': 
-      case 'APPROVED': return 'bg-blue-500/15 text-blue-600 border-blue-200 dark:border-blue-900'; 
-      case 'DELIVERED': 
-      case 'COMPLETED': return 'bg-green-500/15 text-green-600 border-green-200 dark:border-green-900'; 
-      case 'CANCELLED': return 'bg-red-500/15 text-red-600 border-red-200 dark:border-red-900'; 
-      default: return 'bg-muted text-foreground';
+      case "PAID":
+      case "APPROVED":
+        return "bg-blue-500/15 text-blue-600 border-blue-200 dark:border-blue-900";
+      case "DELIVERED":
+      case "COMPLETED":
+        return "bg-green-500/15 text-green-600 border-green-200 dark:border-green-900";
+      case "CANCELLED":
+        return "bg-red-500/15 text-red-600 border-red-200 dark:border-red-900";
+      default:
+        return "bg-muted text-foreground";
     }
   };
 
@@ -59,7 +76,9 @@ export default function TransactionDetailsPage() {
       <div className="w-full h-screen flex items-center justify-center bg-background">
         <div className="flex flex-col items-center gap-2">
           <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
-          <p className="text-muted-foreground text-sm">Loading Transaction...</p>
+          <p className="text-muted-foreground text-sm">
+            Loading Transaction...
+          </p>
         </div>
       </div>
     );
@@ -68,23 +87,31 @@ export default function TransactionDetailsPage() {
   if (!data) return null;
 
   return (
-    <div className="w-full min-h-screen bg-background p-4 md:p-8 font-sans text-foreground">
-      
+    <div className="w-full min-h-screen bg-background md:p-8 pb-8 font-sans text-foreground">
       {/* Top Navigation */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
         <div className="flex items-center gap-3">
-          <Button variant="outline" size="icon" onClick={() => router.back()} className="h-9 w-9">
+          <Button
+            variant="outline"
+            size="icon"
+            onClick={() => router.back()}
+            className="h-9 w-9"
+          >
             <ArrowLeft size={16} />
           </Button>
           <div>
             <h1 className="text-2xl font-bold tracking-tight flex items-center gap-2">
               Transaction #{data.id}
-              <Badge className={`text-xs font-bold border shadow-none ${getStatusStyles(data.status)}`}>
+              <Badge
+                className={`text-xs font-bold border shadow-none ${getStatusStyles(
+                  data.status
+                )}`}
+              >
                 {data.status}
               </Badge>
             </h1>
             <p className="text-muted-foreground text-sm flex items-center gap-2 mt-1">
-              <Calendar size={14} /> 
+              <Calendar size={14} />
               {format(new Date(data.date), "MMMM dd, yyyy 'at' hh:mm a")}
             </p>
           </div>
@@ -94,17 +121,18 @@ export default function TransactionDetailsPage() {
           {/* <Button variant="outline" className="gap-2" onClick={handleInvoiceClick}>
             <Printer size={16} /> Print
           </Button> */}
-          <Button className="gap-2 bg-primary text-primary-foreground" onClick={handleInvoiceClick}>
+          <Button
+            className="gap-2 bg-primary text-primary-foreground"
+            onClick={handleInvoiceClick}
+          >
             <Download size={16} /> Invoice
           </Button>
         </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        
         {/* Left Column: Transaction Items & Payment Info */}
         <div className="lg:col-span-2 space-y-6">
-          
           {/* Items Card */}
           <Card className="border-border bg-card shadow-sm">
             <CardHeader>
@@ -130,14 +158,26 @@ export default function TransactionDetailsPage() {
                         <TableCell>
                           <div className="flex items-center gap-3">
                             <div className="w-10 h-10 rounded bg-muted border border-border overflow-hidden flex-shrink-0">
-                              <img src={item.image || "/placeholder.png"} alt={item.productName} className="w-full h-full object-cover" />
+                              <img
+                                src={item.image || "/placeholder.png"}
+                                alt={item.productName}
+                                className="w-full h-full object-cover"
+                              />
                             </div>
-                            <span className="font-medium text-sm">{item.productName}</span>
+                            <span className="font-medium text-sm">
+                              {item.productName}
+                            </span>
                           </div>
                         </TableCell>
-                        <TableCell className="text-center">{item.quantity}</TableCell>
-                        <TableCell className="text-right">{item.price.toFixed(3)}</TableCell>
-                        <TableCell className="text-right font-bold">{(item.price * item.quantity).toFixed(3)}</TableCell>
+                        <TableCell className="text-center">
+                          {item.quantity}
+                        </TableCell>
+                        <TableCell className="text-right">
+                          {item.price.toFixed(3)}
+                        </TableCell>
+                        <TableCell className="text-right font-bold">
+                          {(item.price * item.quantity).toFixed(3)}
+                        </TableCell>
                       </TableRow>
                     ))}
                   </TableBody>
@@ -175,7 +215,9 @@ export default function TransactionDetailsPage() {
               <Separator />
               <div className="flex justify-between items-center text-lg font-bold">
                 <span>Total Paid</span>
-                <span className="text-primary">{data.totalAmount.toFixed(3)} KWD</span>
+                <span className="text-primary">
+                  {data.totalAmount.toFixed(3)} KWD
+                </span>
               </div>
             </CardContent>
           </Card>
@@ -183,7 +225,6 @@ export default function TransactionDetailsPage() {
 
         {/* Right Column: Customer & Shipping */}
         <div className="space-y-6">
-          
           {/* Customer Card */}
           <Card className="border-border bg-card shadow-sm">
             <CardHeader>
@@ -198,8 +239,12 @@ export default function TransactionDetailsPage() {
                   {data.customerName.charAt(0).toUpperCase()}
                 </div>
                 <div>
-                  <p className="font-bold text-foreground">{data.customerName}</p>
-                  <p className="text-muted-foreground text-xs">Registered Customer</p>
+                  <p className="font-bold text-foreground">
+                    {data.customerName}
+                  </p>
+                  <p className="text-muted-foreground text-xs">
+                    Registered Customer
+                  </p>
                 </div>
               </div>
               <Separator />
@@ -223,12 +268,19 @@ export default function TransactionDetailsPage() {
               </CardTitle>
             </CardHeader>
             <CardContent className="text-sm space-y-2">
-              <p className="font-medium text-foreground">{data.shippingInfo?.area || "Pickup"}</p>
+              <p className="font-medium text-foreground">
+                {data.shippingInfo?.area || "Pickup"}
+              </p>
               {data.shippingInfo?.block && (
                 <div className="text-muted-foreground space-y-1">
-                  <p>Block {data.shippingInfo.block}, Street {data.shippingInfo.street}</p>
+                  <p>
+                    Block {data.shippingInfo.block}, Street{" "}
+                    {data.shippingInfo.street}
+                  </p>
                   <p>House {data.shippingInfo.house}</p>
-                  {data.shippingInfo.avenue && <p>Avenue {data.shippingInfo.avenue}</p>}
+                  {data.shippingInfo.avenue && (
+                    <p>Avenue {data.shippingInfo.avenue}</p>
+                  )}
                 </div>
               )}
               {data.shippingInfo?.specialDirections && (
@@ -239,7 +291,6 @@ export default function TransactionDetailsPage() {
               )}
             </CardContent>
           </Card>
-
         </div>
       </div>
     </div>

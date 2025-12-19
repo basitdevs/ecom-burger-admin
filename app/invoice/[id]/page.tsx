@@ -6,7 +6,7 @@ import { format } from "date-fns";
 import { Loader2, Printer, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import html2canvas from 'html2canvas-pro';
+import html2canvas from "html2canvas-pro";
 import jsPDF from "jspdf";
 
 export default function InvoicePage() {
@@ -40,7 +40,7 @@ export default function InvoicePage() {
 
     try {
       const element = invoiceRef.current;
-      
+
       const canvas = await html2canvas(element, {
         scale: 2,
         useCORS: true,
@@ -49,13 +49,12 @@ export default function InvoicePage() {
 
       const imgData = canvas.toDataURL("image/png");
       const pdf = new jsPDF("p", "mm", "a4");
-      
+
       const pdfWidth = pdf.internal.pageSize.getWidth();
       const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
 
-    
       pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
-      
+
       pdf.save(`Invoice-${data.paymentId || id}.pdf`);
       toast.success("Invoice downloaded successfully");
     } catch (error) {
@@ -74,17 +73,18 @@ export default function InvoicePage() {
     );
   }
 
-  if (!data) return <div className="p-8 text-center text-black">Invoice not found.</div>;
+  if (!data)
+    return <div className="p-8 text-center text-black">Invoice not found.</div>;
 
   return (
-    <div className="min-h-screen bg-gray-50 text-black p-8 font-mono print:p-0 print:bg-white">
-      
-      {/* Action Buttons (Hidden in Print/PDF) */}
-      <div className="max-w-3xl mx-auto mb-6 flex justify-end gap-3 print:hidden">
-        {/* <Button variant="outline" onClick={() => window.print()} className="gap-2 bg-white border-gray-300 hover:bg-gray-100 text-black">
-          <Printer size={16} /> Print
-        </Button> */}
-        <Button onClick={handleDownloadPdf} disabled={downloading} className="gap-2 bg-black text-white hover:bg-gray-800">
+    <div className="min-h-screen bg-gray-50 text-black md:p-8 pb-8 font-mono print:p-0 print:bg-white flex flex-col items-center">
+      {/* Action Buttons */}
+      <div className="w-full max-w-3xl mb-6 flex justify-end gap-3 print:hidden">
+        <Button
+          onClick={handleDownloadPdf}
+          disabled={downloading}
+          className="w-full md:w-auto gap-2 bg-black text-white hover:bg-gray-800 shadow-sm"
+        >
           {downloading ? (
             <Loader2 size={16} className="animate-spin" />
           ) : (
@@ -95,17 +95,21 @@ export default function InvoicePage() {
       </div>
 
       {/* Invoice Content - Wrapped in ref for capture */}
-      <div 
+      <div
         ref={invoiceRef}
-        className="max-w-3xl mx-auto border border-gray-200 bg-white p-12 shadow-sm print:shadow-none print:border-none"
+        className="w-full max-w-3xl border border-gray-200 bg-white shadow-sm print:shadow-none print:border-none p-6 md:p-12 rounded-sm"
       >
         {/* Header */}
-        <div className="flex justify-between items-start border-b border-gray-200 pb-8 mb-8">
-          <div>
-            <h1 className="text-4xl font-bold uppercase tracking-wider text-black">Invoice</h1>
-            <p className="text-sm mt-2 text-gray-500 font-bold">#{data.paymentId}</p>
+        <div className="flex flex-col md:flex-row justify-between items-start border-b border-gray-200 pb-8 mb-8 gap-6 md:gap-0">
+          <div className="order-2 md:order-1">
+            <h1 className="text-3xl md:text-4xl font-bold uppercase tracking-wider text-black">
+              Invoice
+            </h1>
+            <p className="text-xs md:text-sm mt-2 text-gray-500 font-bold break-all">
+              #{data.paymentId}
+            </p>
           </div>
-          <div className="text-right">
+          <div className="text-left md:text-right order-1 md:order-2 w-full md:w-auto">
             <h2 className="font-bold text-xl mb-1 text-black">Ecom-Burger</h2>
             <p className="text-sm text-gray-600">123 Burger Street</p>
             <p className="text-sm text-gray-600">Kuwait City, Kuwait</p>
@@ -114,64 +118,99 @@ export default function InvoicePage() {
         </div>
 
         {/* Info Grid */}
-        <div className="grid grid-cols-2 gap-12 mb-10 text-sm">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 mb-10 text-sm">
           <div>
-            <h3 className="font-bold mb-3 text-gray-400 uppercase text-xs tracking-wider">Bill To</h3>
+            <h3 className="font-bold mb-3 text-gray-400 uppercase text-xs tracking-wider">
+              Bill To
+            </h3>
             <p className="font-bold text-lg text-black">{data.customerName}</p>
-            <p className="text-gray-600">{data.customerEmail}</p>
+            <p className="text-gray-600 break-all">{data.customerEmail}</p>
             <p className="text-gray-600">{data.customerPhone}</p>
             <div className="mt-4 text-gray-600">
-                <p className="font-semibold text-xs text-gray-400 uppercase mb-1">Shipping Address:</p>
-                <p>{data.shippingInfo?.area || "Pickup"}</p>
-                {data.shippingInfo?.block && (
-                    <p>Block {data.shippingInfo.block}, St {data.shippingInfo.street}, H {data.shippingInfo.house}</p>
-                )}
+              <p className="font-semibold text-xs text-gray-400 uppercase mb-1">
+                Shipping Address:
+              </p>
+              <p>{data.shippingInfo?.area || "Pickup"}</p>
+              {data.shippingInfo?.block && (
+                <p>
+                  Block {data.shippingInfo.block}, St {data.shippingInfo.street}
+                  , H {data.shippingInfo.house}
+                </p>
+              )}
             </div>
           </div>
-          <div className="text-right space-y-2">
-            <div className="flex justify-between border-b border-dashed border-gray-300 pb-1">
-              <span className="font-bold text-gray-500 uppercase text-xs">Date</span>
+          <div className="flex flex-col gap-2 md:text-right">
+            <div className="flex justify-between md:justify-end md:gap-8 border-b border-dashed border-gray-300 pb-1">
+              <span className="font-bold text-gray-500 uppercase text-xs">
+                Date
+              </span>
               <span>{format(new Date(data.date), "MMM dd, yyyy")}</span>
             </div>
-            <div className="flex justify-between border-b border-dashed border-gray-300 pb-1">
-              <span className="font-bold text-gray-500 uppercase text-xs">Status</span>
-              <span className="uppercase font-bold text-black">{data.status}</span>
+            <div className="flex justify-between md:justify-end md:gap-8 border-b border-dashed border-gray-300 pb-1">
+              <span className="font-bold text-gray-500 uppercase text-xs">
+                Status
+              </span>
+              <span className="uppercase font-bold text-black">
+                {data.status}
+              </span>
             </div>
-            <div className="flex justify-between border-b border-dashed border-gray-300 pb-1">
-                <span className="font-bold text-gray-500 uppercase text-xs">Method</span>
-                <span>{data.paymentMethod}</span>
+            <div className="flex justify-between md:justify-end md:gap-8 border-b border-dashed border-gray-300 pb-1">
+              <span className="font-bold text-gray-500 uppercase text-xs">
+                Method
+              </span>
+              <span>{data.paymentMethod}</span>
             </div>
           </div>
         </div>
 
-        {/* Table */}
-        <table className="w-full mb-8 text-sm">
-          <thead>
-            <tr className="border-b-2 border-black">
-              <th className="text-left py-3 font-bold uppercase text-xs text-black">Item Description</th>
-              <th className="text-center py-3 font-bold uppercase text-xs text-black">Qty</th>
-              <th className="text-right py-3 font-bold uppercase text-xs text-black">Price</th>
-              <th className="text-right py-3 font-bold uppercase text-xs text-black">Total</th>
-            </tr>
-          </thead>
-          <tbody>
-            {data.items.map((item: any, i: number) => (
-              <tr key={i} className="border-b border-gray-100">
-                <td className="py-4 font-medium text-black">{item.productName}</td>
-                <td className="text-center py-4 text-gray-600">{item.quantity}</td>
-                <td className="text-right py-4 text-gray-600">{item.price.toFixed(3)}</td>
-                <td className="text-right py-4 font-bold text-black">{(item.price * item.quantity).toFixed(3)}</td>
+        {/* Table Wrapper for horizontal scroll on mobile */}
+        <div className="overflow-x-auto -mx-6 md:mx-0 px-6 md:px-0 mb-8">
+          <table className="w-full text-sm min-w-[500px] md:min-w-full">
+            <thead>
+              <tr className="border-b-2 border-black">
+                <th className="text-left py-3 font-bold uppercase text-xs text-black">
+                  Item Description
+                </th>
+                <th className="text-center py-3 font-bold uppercase text-xs text-black">
+                  Qty
+                </th>
+                <th className="text-right py-3 font-bold uppercase text-xs text-black">
+                  Price
+                </th>
+                <th className="text-right py-3 font-bold uppercase text-xs text-black">
+                  Total
+                </th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {data.items.map((item: any, i: number) => (
+                <tr key={i} className="border-b border-gray-100 last:border-0">
+                  <td className="py-4 font-medium text-black">
+                    {item.productName}
+                  </td>
+                  <td className="text-center py-4 text-gray-600">
+                    {item.quantity}
+                  </td>
+                  <td className="text-right py-4 text-gray-600">
+                    {item.price.toFixed(3)}
+                  </td>
+                  <td className="text-right py-4 font-bold text-black">
+                    {(item.price * item.quantity).toFixed(3)}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
 
         {/* Totals */}
-        <div className="flex justify-end">
-          <div className="w-72 space-y-2">
+        <div className="flex justify-start md:justify-end">
+          <div className="w-full md:w-72 space-y-2">
             <div className="flex justify-between text-sm">
               <span className="text-gray-600">Subtotal:</span>
-              <span className="font-medium text-black">{data.totalAmount.toFixed(3)} KWD</span>
+              <span className="font-medium text-black">
+                {data.totalAmount.toFixed(3)} KWD
+              </span>
             </div>
             <div className="flex justify-between text-sm">
               <span className="text-gray-600">Tax (0%):</span>
@@ -183,16 +222,21 @@ export default function InvoicePage() {
             </div>
             <div className="flex justify-between text-xl font-bold pt-2">
               <span className="text-black">Total:</span>
-              <span className="text-black">{data.totalAmount.toFixed(3)} KWD</span>
+              <span className="text-black">
+                {data.totalAmount.toFixed(3)} KWD
+              </span>
             </div>
           </div>
         </div>
 
         {/* Footer */}
         <div className="border-t-2 border-gray-100 pt-8 mt-16 text-center">
-          <p className="text-lg font-bold mb-2 text-black">Thank you for your business!</p>
-          <p className="text-gray-500 text-xs">
-            If you have any questions about this invoice, please contact us at support@ecom-burger.com
+          <p className="text-lg font-bold mb-2 text-black">
+            Thank you for your business!
+          </p>
+          <p className="text-gray-500 text-xs px-4">
+            If you have any questions about this invoice, please contact us at
+            support@ecom-burger.com
           </p>
         </div>
       </div>

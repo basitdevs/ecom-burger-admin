@@ -106,16 +106,16 @@ const CustomersPage = () => {
   };
 
   return (
-    <div className='w-full min-h-screen bg-background text-foreground flex-col justify-center items-center p-6 font-sans'>
+    <div className='w-full min-h-screen bg-background text-foreground flex-col justify-center items-center pb-6 md:p-6 font-sans'>
 
       {/* Header */}
       <div className="w-full bg-card p-6 rounded-sm flex flex-col md:flex-row items-center justify-between gap-4 border border-border shadow-sm mb-6">
         <h1 className="text-3xl font-bold tracking-tight">Customers</h1>
-        <div className="flex items-center gap-4">
-          <Button variant="ghost" onClick={fetchCustomers} className="gap-2">
+        <div className="flex items-center md:flex-row flex-col w-full md:w-auto gap-4">
+          <Button variant="ghost" onClick={fetchCustomers} className="gap-2 w-full md:w-auto">
             Data Refresh <RefreshCw size={18} className={loading ? "animate-spin" : ""} />
           </Button>
-          <div className="bg-muted border border-border rounded-sm px-6 py-2 font-bold min-w-[150px] text-center">
+          <div className="bg-muted border border-border rounded-sm px-6 py-2 w-full md:w-auto font-bold min-w-[150px] text-center">
             Total: {customers.length}
           </div>
         </div>
@@ -162,7 +162,7 @@ const CustomersPage = () => {
 
         {/* Customer Table */}
         <Card className="lg:col-span-8 bg-card border-border shadow-sm overflow-hidden flex flex-col h-full">
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
+          <CardHeader className="flex flex-col md:flex-row md:items-center justify-between pb-2 gap-4 md:gap-0 px-4 md:px-6">
             <CardTitle>Customer List</CardTitle>
             <div className="relative w-64">
               <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
@@ -177,7 +177,7 @@ const CustomersPage = () => {
               />
             </div>
           </CardHeader>
-          <CardContent className="flex-1 flex flex-col justify-between">
+          <CardContent className="flex-1 flex flex-col justify-between px-4 md:px-6">
             <div className="overflow-x-auto">
               <Table>
                 <TableHeader>

@@ -92,7 +92,7 @@ const TransactionsPage = () => {
   };
 
   return (
-    <div className="min-h-screen w-full bg-background p-4 md:p-8 font-sans text-foreground">
+    <div className="min-h-screen w-full bg-background pb-8 md:p-8 font-sans text-foreground">
 
       {/* Header */}
       <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-6 gap-6">

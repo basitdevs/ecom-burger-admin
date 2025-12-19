@@ -144,15 +144,15 @@ export default function CategoriesPage() {
   );
 
   return (
-    <div className="w-full min-h-screen bg-background p-6 font-sans text-foreground">
+    <div className="w-full min-h-screen bg-background md:p-6 pb-6 font-sans text-foreground">
       {/* Header */}
       <div className="w-full bg-card p-6 rounded-sm flex flex-col md:flex-row items-center justify-between gap-4 border border-border shadow-lg mb-8">
         <h1 className="text-3xl font-bold tracking-tight">Categories</h1>
-        <div className="flex items-center gap-4">
-          <Button variant="ghost" onClick={fetchCategories} className="text-primary hover:text-foreground">
+        <div className="flex md:flex-row flex-col w-full md:w-auto items-center gap-4">
+          <Button variant="ghost" onClick={fetchCategories} className="text-primary hover:text-foreground md:w-auto w-full">
             Data Refresh <RefreshCw size={18} className={loading ? "animate-spin ml-2" : "ml-2"} />
           </Button>
-          <div className="bg-muted border border-border rounded-sm px-6 py-2 text-sm font-bold min-w-[150px] text-center">
+          <div className="bg-muted border border-border w-full md:w-auto rounded-sm px-6 py-2 text-sm font-bold min-w-[150px] text-center">
             Total: {categories.length}
           </div>
         </div>
